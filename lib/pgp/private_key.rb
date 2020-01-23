@@ -3,6 +3,7 @@ module PGP
   #   the PGPPrivateKey class and make using it less ghoulish.
   class PrivateKey
     include_package "org.bouncycastle.openpgp"
+    include_package "org.bouncycastle.openpgp.operator.bc"
 
     def self.from_string(string, key_id)
       stream = PGP.string_to_bais(string)
@@ -26,7 +27,8 @@ module PGP
 
     def self.keyring_from_stream(stream)
       yafs = PGPUtil.get_decoder_stream(stream)
-      PGPSecretKeyRingCollection.new(yafs)
+      fingerprint_calculator = BcKeyFingerprintCalculator.new()
+      PGPSecretKeyRingCollection.new(yafs, fingerprint_calculator)
     end
 
   end
