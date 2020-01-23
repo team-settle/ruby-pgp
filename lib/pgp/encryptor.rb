@@ -1,6 +1,7 @@
 module PGP
   class Encryptor < org.sgonyea.pgp.Encryptor
     include_package "org.bouncycastle.openpgp"
+    include_package "org.bouncycastle.openpgp.operator.bc"
 
     def initialize(key_string=nil)
       super()
@@ -61,7 +62,8 @@ module PGP
 
     def keyring_from_stream(stream)
       yafs = PGPUtil.get_decoder_stream(stream)
-      PGPPublicKeyRingCollection.new(yafs)
+      fingerprint_calculator = BcKeyFingerprintCalculator.new()
+      PGPPublicKeyRingCollection.new(yafs, fingerprint_calculator)
     end
 
   end
