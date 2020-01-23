@@ -2,6 +2,8 @@ module PGP
   class RubyDecryptor
     include_package "org.bouncycastle.openpgp"
     include_package "org.bouncycastle.openpgp.operator.bc"
+    include_package "org.bouncycastle.openpgp.operator.jcajce"
+    include_package "java.security"
 
     java_import 'java.io.ByteArrayOutputStream'
 
@@ -32,7 +34,10 @@ module PGP
         end
       end
 
-      clear = pbe.get_data_stream(sec_key, BC_Provider_Code)
+      provider = Security.get_provider(BC_Provider_Code)
+      factory = JcePublicKeyDataDecryptorFactoryBuilder.new().set_provider(provider).set_content_provider(provider).build(sec_key)
+      clear = pbe.get_data_stream(factory)
+
       fingerprint_calculator = BcKeyFingerprintCalculator.new()
 
       plain_fact = PGPObjectFactory.new(clear, fingerprint_calculator)
