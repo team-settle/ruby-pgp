@@ -11,7 +11,7 @@ Fixtures_Path = Bundler.root + 'spec/support/fixtures/'
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.expect_with(:rspec) { |c| c.syntax = :should }
+  config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 
