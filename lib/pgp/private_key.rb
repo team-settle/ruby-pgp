@@ -4,20 +4,22 @@ module PGP
   class PrivateKey
     include_package "org.bouncycastle.openpgp"
     include_package "org.bouncycastle.openpgp.operator.bc"
+    include_package "org.bouncycastle.openpgp.operator.jcajce"
+    include_package "java.security"
 
     def self.from_string(string, key_id)
       stream = PGP.string_to_bais(string)
       pgp_sec = keyring_from_stream(stream)
       sec_key = pgp_sec.get_secret_key(key_id)
 
-      sec_key.extract_private_key(nil, BC_Provider_Code) if sec_key
+      return extract_private_key(sec_key) if sec_key
     end
 
     def self.from_file(filename, key_id)
       pgp_sec = keyring_from_file(filename)
       sec_key = pgp_sec.get_secret_key(key_id)
 
-      sec_key.extract_private_key(nil, BC_Provider_Code) if sec_key
+      return extract_private_key(sec_key) if sec_key
     end
 
     def self.keyring_from_file(filename)
@@ -31,5 +33,18 @@ module PGP
       PGPSecretKeyRingCollection.new(yafs, fingerprint_calculator)
     end
 
+    def self.extract_private_key(sec_key)
+      if sec_key
+        passphrase = nil
+        provider = Security.getProvider(BC_Provider_Code)
+        decryptor_factory = JcePBESecretKeyDecryptorBuilder.new(
+            JcaPGPDigestCalculatorProviderBuilder.new().set_provider(provider).build()
+        ).set_provider(provider).build(passphrase)
+
+        sec_key.extract_private_key(decryptor_factory)
+      else
+        nil
+      end
+    end
   end
 end
