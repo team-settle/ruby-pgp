@@ -14,7 +14,7 @@ describe PGP::Verifier do
 
     context 'When the Public Key is from a file' do
       it "verifies" do
-        verifier.verify(File.read(signed_file)).should == File.read(unsigned_file)
+        expect(verifier.verify(File.read(signed_file))).to eq(File.read(unsigned_file))
       end
     end
 

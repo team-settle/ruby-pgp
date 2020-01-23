@@ -17,7 +17,7 @@ describe PGP::Decryptor do
     }
 
     it "should successfully decrypt an encrypted file" do
-      decryptor.decrypt(encrypted_text).should == unencrypted_text
+      expect(decryptor.decrypt(encrypted_text)).to eq(unencrypted_text)
     end
   end
 
@@ -32,7 +32,7 @@ describe PGP::Decryptor do
       decryptor.add_keys_from_file(private_key_with_passphrase_path)
     end
     it "should decrypt" do
-      decryptor.decrypt(encrypted_text).should == unencrypted_text
+      expect(decryptor.decrypt(encrypted_text)).to eq(unencrypted_text)
     end
 
   end

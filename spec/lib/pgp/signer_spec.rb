@@ -23,7 +23,7 @@ describe PGP::Signer do
   describe '#sign' do
 
     it "signs" do
-      verifier.verify(signer.sign(unsigned_data)).should == unsigned_data
+      expect(verifier.verify(signer.sign(unsigned_data))).to eq(unsigned_data)
     end
 
   end
@@ -37,7 +37,7 @@ describe PGP::Signer do
       decryptor
     end
     it "can decrypt and verify something that has been signed and encrypted" do
-      verifier.verify(decryptor.decrypt(encryptor.encrypt(signer.sign("something fabulous")))).should == "something fabulous"
+      expect(verifier.verify(decryptor.decrypt(encryptor.encrypt(signer.sign("something fabulous"))))).to eq("something fabulous")
     end
   end
 

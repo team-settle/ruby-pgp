@@ -13,7 +13,7 @@ describe PGP::Encryptor do
     it "should accept public key(s) as an argument" do
       encrypted_string = encryptor.encrypt(string, "some filename.txt")
 
-      PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path).should == string
+      expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
     end
   end
 
@@ -26,13 +26,13 @@ describe PGP::Encryptor do
       it "it's encrypted string should be decryptable. durr" do
         encrypted_string = encryptor.encrypt(string, "some filename.txt")
 
-        PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path).should == string
+        expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
 
       it "should not require that a filename be specified" do
         encrypted_string = encryptor.encrypt(string)
 
-        PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path).should == string
+        expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
     end # context 'When the Public Key is from a file'
 
@@ -44,13 +44,13 @@ describe PGP::Encryptor do
       it "it's encrypted string should be decryptable. durr" do
         encrypted_string = encryptor.encrypt(string, "some filename.txt")
 
-        PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path).should == string
+        expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
 
       it "should not require that a filename be specified" do
         encrypted_string = encryptor.encrypt(string)
 
-        PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path).should == string
+        expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
     end # context 'When the Public Key has been read in to memory'
 
@@ -69,7 +69,7 @@ describe PGP::Encryptor do
     it "should encrypt a file" do
       encrypted_file = encryptor.encrypt_file(file_path)
 
-      PGP::RubyDecryptor.decrypt(encrypted_file, private_key_path).should == contents
+      expect(PGP::RubyDecryptor.decrypt(encrypted_file, private_key_path)).to eq(contents)
     end
   end # describe '#encrypt_file'
 
