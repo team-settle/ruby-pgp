@@ -36,7 +36,7 @@ module PGP
     def self.extract_private_key(sec_key)
       if sec_key
         passphrase = nil
-        provider = Security.getProvider(BC_Provider_Code)
+        provider = Security.get_provider(BC_Provider_Code)
         decryptor_factory = JcePBESecretKeyDecryptorBuilder.new(
             JcaPGPDigestCalculatorProviderBuilder.new().set_provider(provider).build()
         ).set_provider(provider).build(passphrase)
