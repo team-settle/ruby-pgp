@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN \curl -sSL "https://get.rvm.io" | bash
 RUN echo "source /etc/profile.d/rvm.sh" >> /etc/bash.bashrc
 
-RUN /bin/bash -c "source /etc/profile.d/rvm.sh; rvm install ruby-2.6.2"
+RUN /bin/bash -c "source /etc/profile.d/rvm.sh; rvm install ruby-2.6.5"
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh; rvm install jruby-1.7.27"
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh; rvm install jruby-9.2.9.0"
 
