@@ -5,6 +5,7 @@ RUN yum update -y && yum install -y \
     git \
     gpg \
     unzip \
+    which \
     zip
 
 RUN \curl -sSL "https://get.rvm.io" | bash
