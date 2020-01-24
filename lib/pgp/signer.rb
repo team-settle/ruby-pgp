@@ -3,6 +3,8 @@ module PGP
     #include_package "org.bouncycastle.openpgp"
     #include_package "org.bouncycastle.openpgp.jcajce"
 
+    attr_accessor :passphrase
+
     def add_keys(key_string)
       self.private_keys = keyring_from_string(key_string)
     end
