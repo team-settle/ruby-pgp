@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe PGP::Verifier do
+  include KeysHelper
+
   let(:public_key_path) { Fixtures_Path.join('public_key_with_passphrase.asc').to_s }
 
   let(:verifier) { PGP::Verifier.new }
   let(:unsigned_file) { Fixtures_Path.join('signed_file.txt') }
   let(:signed_file) { Fixtures_Path.join('signed_file.txt.asc') }
+
+  before { remove_all_keys }
 
   describe '#verify' do
     before do
@@ -25,7 +29,7 @@ describe PGP::Verifier do
       it "should raise an exception" do
         expect {
           verifier.verify(File.read(signed_file))
-        }.to raise_exception(org.sgonyea.pgp.VerificationFailedException, /Signature could not be verified/)
+        }.to raise_exception 'Signature could not be verified'
       end
     end
   end

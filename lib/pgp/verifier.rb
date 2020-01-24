@@ -1,40 +1,27 @@
-module PGP
-  class Verifier # < org.sgonyea.pgp.Verifier
-    #include_package "org.bouncycastle.openpgp"
-    #include_package "org.bouncycastle.openpgp.operator.bc"
+require 'gpgme'
 
+module PGP
+  class Verifier
     def add_keys(key_string)
-      self.public_keys = keyring_from_string(key_string)
+      GPGME::Key.import(key_string)
     end
 
     def add_keys_from_file(filename)
-      self.public_keys = keyring_from_file(filename)
+      add_keys(File.read(filename))
     end
 
     def verify(signed_data)
-      input_stream  = PGP.string_to_bais(signed_data)
-      verified_data = verify_stream(input_stream)
-      String.from_java_bytes(verified_data)
-    end
+      crypto = GPGME::Crypto.new
+      output_data = GPGME::Data.empty!
 
-    def decrypt_file(file_path)
-      decrypt File.read(file_path)
-    end
+      signature_valid = false
+      crypto.verify(signed_data, output: output_data) do |signature|
+        signature_valid = signature.valid?
+      end
 
-    def keyring_from_file(filename)
-      file = File.open(filename)
-      keyring_from_stream(file.to_inputstream)
-    end
+      raise 'Signature could not be verified' unless signature_valid
 
-    def keyring_from_string(key_string)
-      keyring_from_stream PGP.string_to_bais(key_string)
+      output_data.to_s
     end
-
-    def keyring_from_stream(stream)
-      yafs = PGPUtil.get_decoder_stream(stream)
-      fingerprint_calculator = BcKeyFingerprintCalculator.new()
-      PGPPublicKeyRingCollection.new(yafs, fingerprint_calculator)
-    end
-
   end
 end
