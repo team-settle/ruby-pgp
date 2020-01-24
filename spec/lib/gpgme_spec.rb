@@ -2,18 +2,9 @@ require 'spec_helper'
 require 'gpgme'
 
 describe 'gpgme' do
-  def remove_all_keys
-    GPGME::Key.find(:public).each do |k|
-      k.delete!(true)
-    end
-    GPGME::Key.find(:secret).each do |k|
-      k.delete!(true)
-    end
-  end
+  include KeysHelper
 
-  before {
-    remove_all_keys
-  }
+  before { remove_all_keys }
 
   it 'can verify a file with the correct key' do
     expected_contents = File.read(Fixtures_Path.join('signed_file.txt'))

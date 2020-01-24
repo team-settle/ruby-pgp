@@ -1,6 +1,7 @@
 require 'rspec'
 require 'bundler'
 require 'jruby-pgp'
+require 'helpers/keys_helper'
 
 Fixtures_Path = Bundler.root + 'spec/support/fixtures/'
 
@@ -11,6 +12,8 @@ Fixtures_Path = Bundler.root + 'spec/support/fixtures/'
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.include KeysHelper
+
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 
