@@ -11,7 +11,11 @@ describe 'gpgme' do
     end
   end
 
-  it 'can verify a file' do
+  before {
+    remove_all_keys
+  }
+
+  it 'can verify a file with the correct key' do
     expected_contents = File.read(Fixtures_Path.join('signed_file.txt'))
     signed_data = File.read(Fixtures_Path.join('signed_file.txt.asc'))
 
@@ -23,5 +27,21 @@ describe 'gpgme' do
       expect(signature.valid?).to eq(true)
     end
     expect(output_data.to_s).to eq(expected_contents)
+  end
+
+  it 'cannot verify a file with the incorrect key' do
+    signed_data = File.read(Fixtures_Path.join('signed_file.txt.asc'))
+
+    GPGME::Key.import(File.open(Fixtures_Path.join('wrong_public_key_for_signature.asc').to_s))
+
+    crypto = GPGME::Crypto.new
+    output_data = GPGME::Data.empty!
+
+    signature_valid = nil
+    crypto.verify(signed_data, output: output_data) do |signature|
+      signature_valid = signature.valid?
+    end
+
+    expect(signature_valid).to eq(false)
   end
 end
