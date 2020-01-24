@@ -1,4 +1,4 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
 
 if $LOAD_PATH.grep('jruby-pgp').none?
   lib_dir = File.expand_path('../../lib', __FILE__)
