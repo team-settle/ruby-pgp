@@ -1,7 +1,7 @@
 module PGP
-  class Encryptor < org.sgonyea.pgp.Encryptor
-    include_package "org.bouncycastle.openpgp"
-    include_package "org.bouncycastle.openpgp.operator.bc"
+  class Encryptor # < org.sgonyea.pgp.Encryptor
+    #include_package "org.bouncycastle.openpgp"
+    #include_package "org.bouncycastle.openpgp.operator.bc"
 
     def initialize(key_string=nil)
       super()

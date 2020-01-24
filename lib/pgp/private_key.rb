@@ -2,10 +2,10 @@ module PGP
   # This is more module than class. Eventually it will probably inherit from
   #   the PGPPrivateKey class and make using it less ghoulish.
   class PrivateKey
-    include_package "org.bouncycastle.openpgp"
-    include_package "org.bouncycastle.openpgp.operator.bc"
-    include_package "org.bouncycastle.openpgp.operator.jcajce"
-    include_package "java.security"
+    #include_package "org.bouncycastle.openpgp"
+    #include_package "org.bouncycastle.openpgp.operator.bc"
+    #include_package "org.bouncycastle.openpgp.operator.jcajce"
+    #include_package "java.security"
 
     def self.from_string(string, key_id)
       stream = PGP.string_to_bais(string)
@@ -35,13 +35,16 @@ module PGP
 
     def self.extract_private_key(sec_key)
       if sec_key
-        passphrase = nil
-        provider = Security.get_provider(BC_Provider_Code)
-        decryptor_factory = JcePBESecretKeyDecryptorBuilder.new(
-            JcaPGPDigestCalculatorProviderBuilder.new().set_provider(provider).build()
-        ).set_provider(provider).build(passphrase)
+        #passphrase = nil
+        #provider = Security.get_provider(BC_Provider_Code)
+        #decryptor_factory = JcePBESecretKeyDecryptorBuilder.new(
+        #    JcaPGPDigestCalculatorProviderBuilder.new().set_provider(provider).build()
+        #).set_provider(provider).build(passphrase)
 
-        sec_key.extract_private_key(decryptor_factory)
+        #sec_key.extract_private_key(decryptor_factory)
+
+        #  TODO figure out how to extract the private key
+        nil
       else
         nil
       end

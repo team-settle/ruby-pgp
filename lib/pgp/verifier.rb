@@ -1,7 +1,7 @@
 module PGP
-  class Verifier < org.sgonyea.pgp.Verifier
-    include_package "org.bouncycastle.openpgp"
-    include_package "org.bouncycastle.openpgp.operator.bc"
+  class Verifier # < org.sgonyea.pgp.Verifier
+    #include_package "org.bouncycastle.openpgp"
+    #include_package "org.bouncycastle.openpgp.operator.bc"
 
     def add_keys(key_string)
       self.public_keys = keyring_from_string(key_string)
