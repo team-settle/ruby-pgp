@@ -35,4 +35,12 @@ describe 'gpgme' do
 
     expect(signature_valid).to eq(false)
   end
+  it 'can decrypt a file with a private key' do
+    unencrypted_text = File.read(Fixtures_Path.join('unencrypted_file.txt'))
+
+    GPGME::Key.import(File.open(Fixtures_Path.join('private_key.asc').to_s))
+    crypto = GPGME::Crypto.new
+    actual = crypto.decrypt(File.read(Fixtures_Path.join('unencrypted_file.txt.asc'))).to_s
+    expect(actual).to eq(unencrypted_text)
+  end
 end
