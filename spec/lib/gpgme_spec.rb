@@ -35,12 +35,27 @@ describe 'gpgme' do
 
     expect(signature_valid).to eq(false)
   end
+
   it 'can decrypt a file with a private key' do
     unencrypted_text = File.read(Fixtures_Path.join('unencrypted_file.txt'))
 
     GPGME::Key.import(File.open(Fixtures_Path.join('private_key.asc').to_s))
     crypto = GPGME::Crypto.new
     actual = crypto.decrypt(File.read(Fixtures_Path.join('unencrypted_file.txt.asc'))).to_s
+    expect(actual).to eq(unencrypted_text)
+  end
+
+  it 'can decrypt a file with a private key with passphrase' do
+    unencrypted_text = File.read(Fixtures_Path.join('encrypted_with_passphrase_key.txt'))
+
+    options = { pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK }
+    GPGME::Key.import(File.open(Fixtures_Path.join('private_key_with_passphrase.asc').to_s), options)
+    #TODO set the passphrase
+    crypto = GPGME::Crypto.new(options)
+    actual = crypto.decrypt(
+        File.read(Fixtures_Path.join('encrypted_with_passphrase_key.txt.asc')),
+        { password: 'testingpgp' }
+    ).to_s
     expect(actual).to eq(unencrypted_text)
   end
 end
