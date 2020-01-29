@@ -18,6 +18,14 @@ module GPG
       read_version('gpg1 --version', '')
     end
 
+    def should_switch_to_gpg1?
+      if default_gpg_is_v1?
+        false
+      else
+        !version_gpg1.empty?
+      end
+    end
+
     def add_keys(key_data)
     #  TODO
     end

@@ -62,4 +62,40 @@ describe GPG::Runner do
       expect(runner.default_gpg_is_v1?).to be_falsey
     end
   end
+
+  describe :should_switch_to_gpg1? do
+    it 'returns false when the default gpg version is 1' do
+      allow(runner).to receive(:version_default).and_return('1.1.0')
+
+      expect(runner.should_switch_to_gpg1?).to be_falsey
+    end
+
+    it 'returns true when the default gpg version is 2' do
+      allow(runner).to receive(:version_default).and_return('2.0.0')
+      allow(runner).to receive(:version_gpg1).and_return('1.2.0')
+
+      expect(runner.should_switch_to_gpg1?).to be_truthy
+    end
+
+    it 'returns false when the default gpg version is 2 but there is no gpg1 installed' do
+      allow(runner).to receive(:version_default).and_return('2.0.0')
+      allow(runner).to receive(:version_gpg1).and_return('')
+
+      expect(runner.should_switch_to_gpg1?).to be_falsey
+    end
+
+    it 'returns true when only gpg1 installed' do
+      allow(runner).to receive(:version_default).and_return('')
+      allow(runner).to receive(:version_gpg1).and_return('1.2.2')
+
+      expect(runner.should_switch_to_gpg1?).to be_truthy
+    end
+
+    it 'returns false when no gpg installed' do
+      allow(runner).to receive(:version_default).and_return('')
+      allow(runner).to receive(:version_gpg1).and_return('')
+
+      expect(runner.should_switch_to_gpg1?).to be_falsey
+    end
+  end
 end
