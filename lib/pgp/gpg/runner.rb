@@ -7,11 +7,11 @@ module GPG
     end
 
     def version
-      Open3.popen2e('gpg --version') do |stdin, output, handle|
-        return '' unless handle.value.success?
+      read_version('gpg --version', '')
+    end
 
-        output.gets.lines.first.split(' ').last
-      end
+    def version_gpg1
+      read_version('gpg1 --version', '')
     end
 
     def add_keys(key_data)
@@ -20,6 +20,15 @@ module GPG
 
     def verify(signed_data)
     #  TODO
+    end
+
+    private
+
+    def read_version(command, default_value)
+      Open3.popen2e(command) do |stdin, output, handle|
+        return default_value unless handle.value.success?
+        output.gets.lines.first.split(' ').last.strip
+      end
     end
   end
 end

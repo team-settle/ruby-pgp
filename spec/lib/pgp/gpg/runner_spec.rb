@@ -17,6 +17,18 @@ describe GPG::Runner do
     end
   end
 
+  describe 'version_gpg1' do
+    it 'reads gpg1 version' do
+      setup_process('gpg1 --version', true, "gpg (GnuPG) 1.4.20\nlibgcrypt 1.5.3\nblah\nblah")
+      expect(runner.version_gpg1).to eq('1.4.20')
+    end
+
+    it 'returns empty when gpg1 fails' do
+      setup_process('gpg1 --version', false, nil)
+      expect(runner.version_gpg1).to eq('')
+    end
+  end
+
   describe 'is_gpg2?' do
     it 'returns true when version 2 is default' do
       allow(runner).to receive(:version).and_return('2.0.22')
