@@ -4,7 +4,16 @@ require 'gpgme'
 describe 'gpgme' do
   include KeysHelper
 
-  before { remove_all_keys }
+  before {
+    remove_all_keys
+
+    runner = GPG::Runner.new
+    if runner.should_switch_to_gpg1?
+      bin = runner.binary_path_gpg1
+      home_dir = GPGME::Engine.dirinfo('homedir')
+      GPGME::Engine.set_info(GPGME::PROTOCOL_OpenPGP, bin, home_dir)
+    end
+  }
 
   it 'can verify a file with the correct key' do
     expected_contents = File.read(Fixtures_Path.join('signed_file.txt'))
@@ -48,10 +57,8 @@ describe 'gpgme' do
   it 'can decrypt a file with a private key with passphrase' do
     unencrypted_text = File.read(Fixtures_Path.join('encrypted_with_passphrase_key.txt'))
 
-    options = { pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK }
-    GPGME::Key.import(File.open(Fixtures_Path.join('private_key_with_passphrase.asc').to_s), options)
-    #TODO set the passphrase
-    crypto = GPGME::Crypto.new(options)
+    GPGME::Key.import(File.open(Fixtures_Path.join('private_key_with_passphrase.asc').to_s))
+    crypto = GPGME::Crypto.new({ pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK })
     actual = crypto.decrypt(
         File.read(Fixtures_Path.join('encrypted_with_passphrase_key.txt.asc')),
         { password: 'testingpgp' }
