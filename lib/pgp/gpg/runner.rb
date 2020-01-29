@@ -26,14 +26,6 @@ module GPG
       end
     end
 
-    def add_keys(key_data)
-    #  TODO
-    end
-
-    def verify(signed_data)
-    #  TODO
-    end
-
     private
 
     def read_version(command, default_value)
