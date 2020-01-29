@@ -45,4 +45,21 @@ describe GPG::Runner do
       expect(runner.is_gpg2?).to be_falsey
     end
   end
+
+  describe 'is_gpg1?' do
+    it 'returns false when version 2 is default' do
+      allow(runner).to receive(:version).and_return('2.0.22')
+      expect(runner.is_gpg1?).to be_falsey
+    end
+
+    it 'returns true when version 1 is default' do
+      allow(runner).to receive(:version).and_return('1.12.22')
+      expect(runner.is_gpg1?).to be_truthy
+    end
+
+    it 'returns fase when there is no gpg' do
+      allow(runner).to receive(:version).and_return('')
+      expect(runner.is_gpg1?).to be_falsey
+    end
+  end
 end

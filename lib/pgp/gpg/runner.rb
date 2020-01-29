@@ -6,6 +6,10 @@ module GPG
       version.start_with? '2.'
     end
 
+    def is_gpg1?
+      version.start_with? '1.'
+    end
+
     def version
       read_version('gpg --version', '')
     end
