@@ -2,15 +2,15 @@ require 'open3'
 
 module GPG
   class Runner
-    def is_gpg2?
-      version.start_with? '2.'
+    def default_gpg_is_v2?
+      version_default.start_with? '2.'
     end
 
-    def is_gpg1?
-      version.start_with? '1.'
+    def default_gpg_is_v1?
+      version_default.start_with? '1.'
     end
 
-    def version
+    def version_default
       read_version('gpg --version', '')
     end
 
