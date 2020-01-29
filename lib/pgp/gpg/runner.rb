@@ -26,6 +26,13 @@ module GPG
       end
     end
 
+    def binary_path_gpg1
+      Open3.popen2e('which gpg1') do |stdin, output, handle|
+        return '' unless handle.value.success?
+        output.gets.lines.first.strip
+      end
+    end
+
     private
 
     def read_version(command, default_value)

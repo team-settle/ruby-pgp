@@ -98,4 +98,16 @@ describe GPG::Runner do
       expect(runner.should_switch_to_gpg1?).to be_falsey
     end
   end
+
+  describe :binary_path_gpg1 do
+    it 'returns gpg1 path' do
+      setup_process('which gpg1', true, '/usr/bin/gpg1')
+      expect(runner.binary_path_gpg1).to eq('/usr/bin/gpg1')
+    end
+
+    it 'returns empty when which command fails' do
+      setup_process('which gpg1', false, nil)
+      expect(runner.binary_path_gpg1).to eq('')
+    end
+  end
 end
