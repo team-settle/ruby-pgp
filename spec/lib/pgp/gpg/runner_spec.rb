@@ -29,7 +29,7 @@ describe GPG::Runner do
     end
   end
 
-  describe :default_gpg_is_v2 do
+  describe :default_gpg_is_v2? do
     it 'returns true when version 2 is default' do
       allow(runner).to receive(:version_default).and_return('2.0.22')
       expect(runner.default_gpg_is_v2?).to be_truthy
@@ -46,7 +46,7 @@ describe GPG::Runner do
     end
   end
 
-  describe :default_gpg_is_v1 do
+  describe :default_gpg_is_v1? do
     it 'returns false when version 2 is default' do
       allow(runner).to receive(:version_default).and_return('2.0.22')
       expect(runner.default_gpg_is_v1?).to be_falsey
