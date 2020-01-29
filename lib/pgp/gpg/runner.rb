@@ -6,9 +6,7 @@ module GPG
       Open3.popen2e('gpg --version') do |stdin, output, handle|
         return '' unless handle.value.success?
 
-        full_version_info = output.gets
-        version_number = full_version_info.lines.first.split(' ').last
-        return version_number
+        output.gets.lines.first.split(' ').last
       end
     end
 
