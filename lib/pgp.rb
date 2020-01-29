@@ -4,7 +4,7 @@ require 'pgp/verifier'
 require 'pgp/signer'
 require 'pgp/private_key'
 require 'pgp/gpg/runner'
-require 'pgp/gpg/gpgme_version_helper'
+require 'pgp/gpgme/version_helper'
 
 module PGP
   autoload :VERSION,        'pgp/version'

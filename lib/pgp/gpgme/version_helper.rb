@@ -1,5 +1,5 @@
-module GPG
-  class GPGMEVersionHelper
+module GPGME
+  class VersionHelper
     def self.switch_to_gpg1
       runner = GPG::Runner.new
       if runner.should_switch_to_gpg1?

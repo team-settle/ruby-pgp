@@ -6,7 +6,7 @@ describe 'gpgme' do
 
   before {
     remove_all_keys
-    GPG::GPGMEVersionHelper.switch_to_gpg1
+    GPGME::VersionHelper.switch_to_gpg1
   }
 
   it 'can verify a file with the correct key' do
