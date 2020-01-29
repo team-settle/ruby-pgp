@@ -18,9 +18,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'gpgme' # TODO: remove this because it doesn't work with gpg2
-  gem.add_dependency 'iostreams'
-  gem.add_dependency 'rbnacl'
+  gem.add_dependency 'gpgme'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
