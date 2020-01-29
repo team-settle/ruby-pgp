@@ -3,6 +3,7 @@ require 'gpgme'
 module PGP
   class Verifier
     def add_keys(key_string)
+      GPGME::VersionHelper.switch_to_gpg1
       GPGME::Key.import(key_string)
     end
 
@@ -11,6 +12,7 @@ module PGP
     end
 
     def verify(signed_data)
+      GPGME::VersionHelper.switch_to_gpg1
       crypto = GPGME::Crypto.new
       output_data = GPGME::Data.empty!
 
