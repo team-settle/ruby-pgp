@@ -21,3 +21,4 @@ RUN /bin/bash -c "source /root/.sdkman/bin/sdkman-init.sh; sdk install java 6.0.
 RUN /bin/bash -c "source /root/.sdkman/bin/sdkman-init.sh; sdk install java 7.0.242-zulu"
 RUN /bin/bash -c "source /root/.sdkman/bin/sdkman-init.sh; sdk install java 8.0.232-open"
 
+RUN apt-get install gnupg1 -y

@@ -13,3 +13,5 @@ RUN echo "source /etc/profile.d/rvm.sh" >> /etc/bash.bashrc
 
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh; rvm install ruby-2.6.5"
 
+RUN yum localinstall -y http://rpms.remirepo.net/enterprise/7/remi/x86_64/gnupg1-1.4.20-1.el7.remi.x86_64.rpm
+
