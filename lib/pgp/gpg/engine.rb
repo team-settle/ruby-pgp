@@ -12,6 +12,7 @@ module GPG
     end
 
     def import_key(key_contents)
+      log("Import Key:\n#{key_contents}")
       Tempfile.open do |f|
         f.write(key_contents)
         runner.import_key_from_file(f.path)
@@ -19,6 +20,7 @@ module GPG
     end
 
     def verify_signature(signature_data)
+      log("Verify Signature:\n#{signature_data}")
       Tempfile.open do |f|
         f.write(signature_data)
         runner.verify_signature_file(f.path)
@@ -31,14 +33,24 @@ module GPG
     end
 
     def delete_all_private_keys
+      log('Delete all private keys')
       runner.read_private_key_fingerprints.each do |k|
         runner.delete_private_key k
       end
     end
 
     def delete_all_public_keys
+      log('Delete all public keys')
       runner.read_public_key_fingerprints.each do |k|
         runner.delete_public_key k
+      end
+    end
+
+    protected
+
+    def log(message)
+      if verbose
+        PGP::Log.logger.info(message)
       end
     end
   end
