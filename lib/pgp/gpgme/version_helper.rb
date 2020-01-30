@@ -1,4 +1,5 @@
 module GPGME
+  # @deprecated this class will go away once we stop using gpgme
   class VersionHelper
     def self.switch_to_gpg1
       runner = GPG::Runner.new

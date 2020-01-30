@@ -14,10 +14,12 @@ module GPG
       read_version('gpg --version', '')
     end
 
+    # @deprecated this method will go away once we stop using gpgme
     def version_gpg1
       read_version('gpg1 --version', '')
     end
 
+    # @deprecated this method will go away once we stop using gpgme
     def should_switch_to_gpg1?
       if default_gpg_is_v1?
         false
@@ -26,6 +28,7 @@ module GPG
       end
     end
 
+    # @deprecated this method will go away once we stop using gpgme
     def binary_path_gpg1
       Open3.popen2e('which gpg1') do |stdin, output, handle|
         return '' unless handle.value.success?
