@@ -66,7 +66,17 @@ module GPG
       end
     end
 
+    def import_key_from_file(path)
+      run_gpg_silent_command("gpg --quiet --batch --import #{path}")
+    end
+
     private
+
+    def run_gpg_silent_command(command)
+      Open3.popen2e(command) do |stdin, output, handle|
+        handle.value.success?
+      end
+    end
 
     def read_version(command, default_value)
       Open3.popen2e(command) do |stdin, output, handle|

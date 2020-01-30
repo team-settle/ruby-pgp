@@ -217,4 +217,20 @@ sub   2048R/412E5D21 2012-06-14
       expect(runner.delete_public_key('AAAAAAA')).to eq(false)
     end
   end
+
+  describe :import_key_from_file do
+    it 'imports the key contents from a file' do
+      setup_process('gpg --quiet --batch --import ~/secret.pgp', true, '')
+
+      expect(runner.import_key_from_file('~/secret.pgp')).to eq(true)
+
+      expect(Open3).to have_received(:popen2e)
+    end
+
+    it 'returns false when the import fails' do
+      setup_process('gpg --quiet --batch --import ~/secret.pgp', false, '')
+
+      expect(runner.import_key_from_file('~/secret.pgp')).to eq(false)
+    end
+  end
 end
