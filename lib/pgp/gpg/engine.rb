@@ -6,6 +6,13 @@ module GPG
       self.runner = runner || GPG::Runner.new
     end
 
+    def import_key(key_contents)
+      Tempfile.open do |f|
+        f.write(key_contents)
+        runner.import_key_from_file(f.path)
+      end
+    end
+
     def delete_all_keys
       delete_all_private_keys
       delete_all_public_keys

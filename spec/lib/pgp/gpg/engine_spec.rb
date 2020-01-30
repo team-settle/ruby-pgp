@@ -43,4 +43,19 @@ describe GPG::Engine do
       expect(deleted_fingerprints).to eq(['privfp1', 'privfp2', 'pubfp1', 'pubfp2'])
     end
   end
+
+  describe :import_key do
+    it 'creates a temporary file and imports the key' do
+      temp_file_stub = double
+      allow(temp_file_stub).to receive(:path).and_return('/tmp/zzz1')
+      allow(temp_file_stub).to receive(:write).with('key contents aaaaa')
+      allow(Tempfile).to receive(:open).and_yield(temp_file_stub)
+      allow(runner).to receive(:import_key_from_file).with('/tmp/zzz1').and_return(true)
+
+      expect(engine.import_key('key contents aaaaa')).to eq(true)
+
+      expect(temp_file_stub).to have_received(:write)
+      expect(runner).to have_received(:import_key_from_file)
+    end
+  end
 end
