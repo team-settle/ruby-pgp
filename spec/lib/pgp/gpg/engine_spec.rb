@@ -3,8 +3,8 @@ require 'spec_helper'
 describe GPG::Engine do
   include TempHelper
 
-  let(:runner) { double }
-  let(:engine) { GPG::Engine.new(runner) }
+  let(:engine) { GPG::Engine.new(nil,true) }
+  let(:runner) { engine.runner }
 
   describe :delete_all_private_keys do
     it 'deletes all the private keys' do
