@@ -1,3 +1,5 @@
+require 'gpgme'
+require 'pgp/keys_importer'
 require 'pgp/decryptor'
 require 'pgp/encryptor'
 require 'pgp/verifier'
