@@ -53,17 +53,11 @@ module GPG
     end
 
     def delete_private_key(fingerprint)
-      command = "gpg --quiet --batch --delete-secret-key #{fingerprint}"
-      Open3.popen2e(command) do |stdin, output, handle|
-        handle.value.success?
-      end
+      run_gpg_silent_command("gpg --quiet --batch --delete-secret-key #{fingerprint}")
     end
 
     def delete_public_key(fingerprint)
-      command = "gpg --quiet --batch --delete-key #{fingerprint}"
-      Open3.popen2e(command) do |stdin, output, handle|
-        handle.value.success?
-      end
+      run_gpg_silent_command("gpg --quiet --batch --delete-key #{fingerprint}")
     end
 
     def import_key_from_file(path)
