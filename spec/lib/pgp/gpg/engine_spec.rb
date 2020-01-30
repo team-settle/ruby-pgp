@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe GPG::Engine do
+  include TempHelper
+
   let(:runner) { double }
   let(:engine) { GPG::Engine.new(runner) }
 
@@ -46,11 +48,8 @@ describe GPG::Engine do
 
   describe :import_key do
     it 'creates a temporary file and imports the key' do
-      temp_file_stub = double
-      allow(temp_file_stub).to receive(:path).and_return('/tmp/zzz1')
-      allow(temp_file_stub).to receive(:write).with('key contents aaaaa')
-      allow(Tempfile).to receive(:open).and_yield(temp_file_stub)
-      allow(runner).to receive(:import_key_from_file).with('/tmp/zzz1').and_return(true)
+      temp_file_stub = setup_temp_file('key contents aaaaa')
+      allow(runner).to receive(:import_key_from_file).with(temp_file_stub.path).and_return(true)
 
       expect(engine.import_key('key contents aaaaa')).to eq(true)
 
@@ -61,11 +60,8 @@ describe GPG::Engine do
 
   describe :verify_signature do
     it 'creates a temporary file and verifies the signature data' do
-      temp_file_stub = double
-      allow(temp_file_stub).to receive(:path).and_return('/tmp/zzz1')
-      allow(temp_file_stub).to receive(:write).with('signature contents aaaaa')
-      allow(Tempfile).to receive(:open).and_yield(temp_file_stub)
-      allow(runner).to receive(:verify_signature_file).with('/tmp/zzz1').and_return(true)
+      temp_file_stub = setup_temp_file('signature contents aaaaa')
+      allow(runner).to receive(:verify_signature_file).with(temp_file_stub.path).and_return(true)
 
       expect(engine.verify_signature('signature contents aaaaa')).to eq(true)
 

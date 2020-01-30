@@ -3,6 +3,7 @@ require 'bundler'
 require 'jruby-pgp'
 require 'helpers/keys_helper'
 require 'helpers/process_helper'
+require 'helpers/temp_helper'
 
 Fixtures_Path = Bundler.root + 'spec/support/fixtures/'
 
