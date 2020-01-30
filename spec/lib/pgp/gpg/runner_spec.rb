@@ -110,4 +110,41 @@ describe GPG::Runner do
       expect(runner.binary_path_gpg1).to eq('')
     end
   end
+
+  describe :read_private_key_fingerprints do
+    it 'reads all the private key fingerprints' do
+      fingerprints = [
+        '23AD063A33C2EBE09F9A71ED9539E22A3388EE24',
+        'A99BFCC3B6B952D66AFC1F3C48508D311DD34131'
+      ]
+      seeded_output = '''
+/root/.gnupg/secring.gpg
+------------------------
+sec   2048R/3388EE24 2013-03-04
+      Key fingerprint = 23AD 063A 33C2 EBE0 9F9A  71ED 9539 E22A 3388 EE24
+uid                  Chris Nelson <superchrisnelson@gmail.com>
+ssb   2048R/349BAAD3 2013-03-04
+
+sec   2048R/1DD34131 2012-06-14
+      Key fingerprint = A99B FCC3 B6B9 52D6 6AFC  1F3C 4850 8D31 1DD3 4131
+uid                  JRuby BG PGP Bug <foo@bar.com>
+ssb   2048R/412E5D21 2012-06-14
+'''
+      setup_process('gpg --quiet --list-secret-keys --fingerprint', true, seeded_output)
+
+      expect(runner.read_private_key_fingerprints).to eq(fingerprints)
+    end
+
+    it 'returns empty when there are no secret keys' do
+      setup_process('gpg --quiet --list-secret-keys --fingerprint', false, '')
+
+      expect(runner.read_private_key_fingerprints).to eq([])
+    end
+
+    it 'returns empty when gpg fails' do
+      setup_process('gpg --quiet --list-secret-keys --fingerprint', false, nil)
+
+      expect(runner.read_private_key_fingerprints).to eq([])
+    end
+  end
 end
