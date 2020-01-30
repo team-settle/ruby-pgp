@@ -233,4 +233,20 @@ sub   2048R/412E5D21 2012-06-14
       expect(runner.import_key_from_file('~/secret.pgp')).to eq(false)
     end
   end
+
+  describe :verify_signature_file do
+    it 'verifies the signature contents from a file' do
+      setup_process('gpg --quiet --batch --verify ~/signature.asc', true, '')
+
+      expect(runner.verify_signature_file('~/signature.asc')).to eq(true)
+
+      expect(Open3).to have_received(:popen2e)
+    end
+
+    it 'returns false when verification fails' do
+      setup_process('gpg --quiet --batch --verify ~/signature.asc', false, '')
+
+      expect(runner.verify_signature_file('~/signature.asc')).to eq(false)
+    end
+  end
 end

@@ -64,6 +64,10 @@ module GPG
       run_gpg_silent_command("gpg --quiet --batch --import #{path}")
     end
 
+    def verify_signature_file(path)
+      run_gpg_silent_command("gpg --quiet --batch --verify #{path}")
+    end
+
     private
 
     def run_gpg_silent_command(command)
