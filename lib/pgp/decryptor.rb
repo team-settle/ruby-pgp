@@ -1,20 +1,20 @@
 module PGP
-  class Decryptor # < org.sgonyea.pgp.Decryptor
-    #include_package "org.bouncycastle.openpgp"
-    #include_package "org.bouncycastle.openpgp.jcajce"
+  class Decryptor
+    attr_accessor :passphrase
 
     def add_keys(key_string)
-      self.private_keys = keyring_from_string(key_string)
+      GPGME::VersionHelper.switch_to_gpg1
+      GPGME::Key.import(key_string)
     end
 
     def add_keys_from_file(filename)
-      self.private_keys = keyring_from_file(filename)
+      add_keys(File.read(filename))
     end
 
     def decrypt(encrypted_data)
-      input_stream    = PGP.string_to_bais(encrypted_data)
-      decrypted_data  = decrypt_stream(input_stream)
-      String.from_java_bytes(decrypted_data)
+      GPGME::VersionHelper.switch_to_gpg1
+      crypto = GPGME::Crypto.new({ pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK })
+      crypto.decrypt(encrypted_data, decrypt_options).to_s
     end
 
     def decrypt_file(file_path)
@@ -22,20 +22,13 @@ module PGP
     end
 
     protected
-    def keyring_from_file(filename)
-      file = File.open(filename)
-      keyring_from_stream(file.to_inputstream)
-    end
 
-    def keyring_from_string(string)
-      input_stream = PGP.string_to_bais(string)
-      keyring_from_stream(input_stream)
+    def decrypt_options
+      if (passphrase || '').empty?
+        {}
+      else
+        { password: passphrase }
+      end
     end
-
-    def keyring_from_stream(stream)
-      yafs = PGPUtil.get_decoder_stream(stream)
-      JcaPGPSecretKeyRingCollection.new(yafs)
-    end
-
   end
 end
