@@ -13,6 +13,13 @@ module GPG
       end
     end
 
+    def verify_signature(signature_data)
+      Tempfile.open do |f|
+        f.write(signature_data)
+        runner.verify_signature_file(f.path)
+      end
+    end
+
     def delete_all_keys
       delete_all_private_keys
       delete_all_public_keys
