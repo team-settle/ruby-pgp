@@ -34,21 +34,21 @@ module GPG
 
     # @deprecated this method will go away once we stop using gpgme
     def binary_path_gpg1
-      Open3.popen2e('which gpg1') do |stdin, output, handle|
+      run('which gpg1') do |stdin, output, handle|
         return '' unless handle.value.success?
         output.gets.lines.first.strip
       end
     end
 
     def read_private_key_fingerprints
-      Open3.popen2e('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
+      run('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
         extract_fingerprints(output)
       end
     end
 
     def read_public_key_fingerprints
-      Open3.popen2e('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
+      run('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
         extract_fingerprints(output)
       end
@@ -73,13 +73,13 @@ module GPG
     private
 
     def run_gpg_silent_command(command)
-      Open3.popen2e(command) do |stdin, output, handle|
+      run(command) do |stdin, output, handle|
         handle.value.success?
       end
     end
 
     def read_version(command, default_value)
-      Open3.popen2e(command) do |stdin, output, handle|
+      run(command) do |stdin, output, handle|
         return default_value unless handle.value.success?
         output.gets.lines.first.split(' ').last.strip
       end
@@ -92,6 +92,12 @@ module GPG
           .filter { |l| l.downcase.include? 'key fingerprint =' }
           .map { |l| l.split('=').last }
           .map { |l| l.gsub(' ', '').strip }
+    end
+
+    def run(command)
+      Open3.popen2e(command) do |stdin, output, handle|
+        yield(stdin, output, handle)
+      end
     end
   end
 end
