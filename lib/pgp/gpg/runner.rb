@@ -61,6 +61,12 @@ module GPG
       end
     end
 
+    def delete_all_private_keys
+      read_private_key_fingerprints.each do |k|
+        delete_private_key k
+      end
+    end
+
     private
 
     def read_version(command, default_value)

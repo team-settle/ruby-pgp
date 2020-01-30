@@ -217,4 +217,16 @@ sub   2048R/412E5D21 2012-06-14
       expect(runner.delete_key('AAAAAAA')).to eq(false)
     end
   end
+
+  describe :delete_all_private_keys do
+    it 'deletes all the private keys' do
+      allow(runner).to receive(:read_private_key_fingerprints).and_return(['fp1', 'fp2'])
+      allow(runner).to receive(:delete_private_key)
+
+      runner.delete_all_private_keys
+
+      expect(runner).to have_received(:delete_private_key).with('fp1')
+      expect(runner).to have_received(:delete_private_key).with('fp2')
+    end
+  end
 end
