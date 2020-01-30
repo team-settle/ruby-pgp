@@ -2,6 +2,8 @@ require 'open3'
 
 module GPG
   class Runner
+    attr_accessor :verbose
+
     # @deprecated this method will go away once we stop using gpgme
     def default_gpg_is_v2?
       version_default.start_with? '2.'
