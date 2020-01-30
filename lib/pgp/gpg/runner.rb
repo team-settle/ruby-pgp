@@ -98,17 +98,19 @@ module GPG
     end
 
     def run(command)
-      if verbose
-        PGP::Log.logger.info("Running Command: #{command}")
-      end
+      log("Running Command: #{command}")
 
       Open3.popen2e(command) do |stdin, output, handle|
-        if verbose
-          PGP::Log.logger.info("Output:\n#{output.gets}")
-          PGP::Log.logger.info("Success?: #{handle.value.success?}")
-        end
+        log("Output:\n#{output.gets}")
+        log("Success?: #{handle.value.success?}")
 
         yield(stdin, output, handle)
+      end
+    end
+
+    def log(message)
+      if verbose
+        PGP::Log.logger.info(message)
       end
     end
   end
