@@ -3,7 +3,7 @@ require 'spec_helper'
 describe GPG::Runner do
   include ProcessHelper
 
-  let(:runner) { GPG::Runner.new }
+  let(:runner) { GPG::Runner.new(verbose: true) }
 
   describe :version_default do
     it 'reads gpg version' do

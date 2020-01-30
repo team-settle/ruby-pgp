@@ -4,6 +4,10 @@ module GPG
   class Runner
     attr_accessor :verbose
 
+    def initialize(verbose = false)
+      self.verbose = verbose
+    end
+
     # @deprecated this method will go away once we stop using gpgme
     def default_gpg_is_v2?
       version_default.start_with? '2.'
@@ -95,7 +99,16 @@ module GPG
     end
 
     def run(command)
+      if verbose
+        PGP::Log.logger.info("Running Command: #{command}")
+      end
+
       Open3.popen2e(command) do |stdin, output, handle|
+        if verbose
+          PGP::Log.logger.info("Output:\n#{output.gets}")
+          PGP::Log.logger.info("Success?: #{handle.value.success?}")
+        end
+
         yield(stdin, output, handle)
       end
     end
