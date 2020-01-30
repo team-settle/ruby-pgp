@@ -59,4 +59,20 @@ describe 'gpgme' do
     ).to_s
     expect(actual).to eq(unencrypted_text)
   end
+
+  it 'can encrypt some text with a public key' do
+    public_key = File.read(Fixtures_Path.join('public_key.asc').to_s)
+    private_key = File.read(Fixtures_Path.join('private_key.asc').to_s)
+
+    remove_all_keys
+    GPGME::Key.import(public_key)
+
+    encrypted_text = GPGME::Crypto.new.encrypt('some seeded text').to_s
+
+    remove_all_keys
+    GPGME::Key.import(private_key)
+
+    plaintext = GPGME::Crypto.new.decrypt(encrypted_text).to_s
+    expect(plaintext).to eq('some seeded text')
+  end
 end
