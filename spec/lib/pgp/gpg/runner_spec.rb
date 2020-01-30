@@ -136,7 +136,7 @@ ssb   2048R/412E5D21 2012-06-14
     end
 
     it 'returns empty when there are no secret keys' do
-      setup_process('gpg --quiet --list-secret-keys --fingerprint', false, '')
+      setup_process('gpg --quiet --list-secret-keys --fingerprint', true, nil)
 
       expect(runner.read_private_key_fingerprints).to eq([])
     end

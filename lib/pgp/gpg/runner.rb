@@ -47,14 +47,14 @@ module GPG
     def read_private_key_fingerprints
       run('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
-        extract_fingerprints(output)
+        extract_fingerprints(output.gets)
       end
     end
 
     def read_public_key_fingerprints
       run('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
-        extract_fingerprints(output)
+        extract_fingerprints(output.gets)
       end
     end
 
@@ -89,9 +89,8 @@ module GPG
       end
     end
 
-    def extract_fingerprints(output)
-      output
-          .gets
+    def extract_fingerprints(str)
+      (str || '')
           .lines
           .filter { |l| l.downcase.include? 'key fingerprint =' }
           .map { |l| l.split('=').last }
