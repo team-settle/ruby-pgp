@@ -1,4 +1,5 @@
 require 'gpgme'
+require 'pgp/log'
 require 'pgp/keys_importer'
 require 'pgp/decryptor'
 require 'pgp/encryptor'
@@ -30,5 +31,4 @@ module PGP
   def self.time_now
     Time.now
   end
-
 end
