@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module GPG
   class Engine
     attr_accessor :runner
