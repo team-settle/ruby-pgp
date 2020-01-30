@@ -148,8 +148,8 @@ ssb   2048R/412E5D21 2012-06-14
     end
   end
 
-  describe :read_key_fingerprints do
-    it 'reads all the key fingerprints' do
+  describe :read_public_key_fingerprints do
+    it 'reads all the public key fingerprints' do
       fingerprints = [
         '23AD063A33C2EBE09F9A71ED9539E22A3388EE24',
         'A99BFCC3B6B952D66AFC1F3C48508D311DD34131'
@@ -170,19 +170,19 @@ sub   2048R/412E5D21 2012-06-14
 
       setup_process('gpg --quiet --list-keys --fingerprint', true, seeded_output)
 
-      expect(runner.read_key_fingerprints).to eq(fingerprints)
+      expect(runner.read_public_key_fingerprints).to eq(fingerprints)
     end
 
-    it 'returns empty when there are no keys' do
+    it 'returns empty when there are no public keys' do
       setup_process('gpg --quiet --list-keys --fingerprint', false, '')
 
-      expect(runner.read_key_fingerprints).to eq([])
+      expect(runner.read_public_key_fingerprints).to eq([])
     end
 
     it 'returns empty when gpg fails' do
       setup_process('gpg --quiet --list-keys --fingerprint', false, nil)
 
-      expect(runner.read_key_fingerprints).to eq([])
+      expect(runner.read_public_key_fingerprints).to eq([])
     end
   end
 
@@ -202,11 +202,11 @@ sub   2048R/412E5D21 2012-06-14
     end
   end
 
-  describe :delete_key do
-    it 'deletes they key with the specified fingerprint' do
+  describe :delete_public_key do
+    it 'deletes the public key with the specified fingerprint' do
       setup_process('gpg --quiet --batch --delete-key AAAAAAA', true, '')
 
-      expect(runner.delete_key('AAAAAAA')).to eq(true)
+      expect(runner.delete_public_key('AAAAAAA')).to eq(true)
 
       expect(Open3).to have_received(:popen2e)
     end
@@ -214,7 +214,7 @@ sub   2048R/412E5D21 2012-06-14
     it 'returns false when the deletion fails' do
       setup_process('gpg --quiet --batch --delete-key AAAAAAA', false, '')
 
-      expect(runner.delete_key('AAAAAAA')).to eq(false)
+      expect(runner.delete_public_key('AAAAAAA')).to eq(false)
     end
   end
 
@@ -230,15 +230,15 @@ sub   2048R/412E5D21 2012-06-14
     end
   end
 
-  describe :delete_all_keys do
-    it 'deletes all the keys' do
-      allow(runner).to receive(:read_key_fingerprints).and_return(['fp1', 'fp2'])
-      allow(runner).to receive(:delete_key)
+  describe :delete_all_public_keys do
+    it 'deletes all the public keys' do
+      allow(runner).to receive(:read_public_key_fingerprints).and_return(['fp1', 'fp2'])
+      allow(runner).to receive(:delete_public_key)
 
-      runner.delete_all_keys
+      runner.delete_all_public_keys
 
-      expect(runner).to have_received(:delete_key).with('fp1')
-      expect(runner).to have_received(:delete_key).with('fp2')
+      expect(runner).to have_received(:delete_public_key).with('fp1')
+      expect(runner).to have_received(:delete_public_key).with('fp2')
     end
   end
 end

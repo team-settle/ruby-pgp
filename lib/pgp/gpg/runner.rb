@@ -40,7 +40,7 @@ module GPG
       end
     end
 
-    def read_key_fingerprints
+    def read_public_key_fingerprints
       Open3.popen2e('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
         extract_fingerprints(output)
@@ -54,7 +54,7 @@ module GPG
       end
     end
 
-    def delete_key(fingerprint)
+    def delete_public_key(fingerprint)
       command = "gpg --quiet --batch --delete-key #{fingerprint}"
       Open3.popen2e(command) do |stdin, output, handle|
         handle.value.success?
@@ -67,9 +67,9 @@ module GPG
       end
     end
 
-    def delete_all_keys
-      read_key_fingerprints.each do |k|
-        delete_key k
+    def delete_all_public_keys
+      read_public_key_fingerprints.each do |k|
+        delete_public_key k
       end
     end
 
