@@ -36,12 +36,14 @@ module GPG
     def read_private_key_fingerprints
       Open3.popen2e('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
-        output
-            .gets
-            .lines
-            .filter { |l| l.downcase.include? 'key fingerprint =' }
-            .map { |l| l.split('=').last }
-            .map { |l| l.gsub(' ', '').strip }
+        extract_fingerprints(output)
+      end
+    end
+
+    def read_key_fingerprints
+      Open3.popen2e('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
+        return [] unless handle.value.success?
+        extract_fingerprints(output)
       end
     end
 
@@ -52,6 +54,15 @@ module GPG
         return default_value unless handle.value.success?
         output.gets.lines.first.split(' ').last.strip
       end
+    end
+
+    def extract_fingerprints(output)
+      output
+          .gets
+          .lines
+          .filter { |l| l.downcase.include? 'key fingerprint =' }
+          .map { |l| l.split('=').last }
+          .map { |l| l.gsub(' ', '').strip }
     end
   end
 end
