@@ -33,6 +33,11 @@ module GPG
       end
     end
 
+    def delete_all_keys
+      delete_all_private_keys
+      delete_all_public_keys
+    end
+
     def read_private_key_fingerprints
       Open3.popen2e('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?

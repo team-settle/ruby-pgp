@@ -241,4 +241,20 @@ sub   2048R/412E5D21 2012-06-14
       expect(runner).to have_received(:delete_public_key).with('fp2')
     end
   end
+
+  describe :delete_all_keys do
+    it 'deletes all private and public keys' do
+      deleted_fingerprints = []
+
+      allow(runner).to receive(:read_private_key_fingerprints).and_return(['privfp1', 'privfp2'])
+      allow(runner).to receive(:delete_private_key) { |k| deleted_fingerprints << k }
+
+      allow(runner).to receive(:read_public_key_fingerprints).and_return(['pubfp1', 'pubfp2'])
+      allow(runner).to receive(:delete_public_key) { |k| deleted_fingerprints << k }
+
+      runner.delete_all_keys
+
+      expect(deleted_fingerprints).to eq(['privfp1', 'privfp2', 'pubfp1', 'pubfp2'])
+    end
+  end
 end
