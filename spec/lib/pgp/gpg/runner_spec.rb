@@ -201,4 +201,20 @@ sub   2048R/412E5D21 2012-06-14
       expect(runner.delete_private_key('AAAAAAA')).to eq(false)
     end
   end
+
+  describe :delete_key do
+    it 'deletes they key with the specified fingerprint' do
+      setup_process('gpg --quiet --batch --delete-key AAAAAAA', true, '')
+
+      expect(runner.delete_key('AAAAAAA')).to eq(true)
+
+      expect(Open3).to have_received(:popen2e)
+    end
+
+    it 'returns false when the deletion fails' do
+      setup_process('gpg --quiet --batch --delete-key AAAAAAA', false, '')
+
+      expect(runner.delete_key('AAAAAAA')).to eq(false)
+    end
+  end
 end
