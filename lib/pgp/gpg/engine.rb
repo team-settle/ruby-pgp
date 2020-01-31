@@ -12,7 +12,7 @@ module GPG
     end
 
     def import_key(key_contents)
-      log("Import Key:\n#{key_contents}")
+      log("Import Key")
       Tempfile.open do |f|
         f.write(key_contents)
         f.rewind
@@ -21,7 +21,7 @@ module GPG
     end
 
     def verify_signature(signature_data)
-      log("Verify Signature:\n#{signature_data}")
+      log("Verify Signature")
       Tempfile.open do |f|
         f.write(signature_data)
         f.rewind
