@@ -219,6 +219,8 @@ sub   2048R/412E5D21 2012-06-14
   end
 
   describe :import_key_from_file do
+    before { allow(File).to receive(:read) }
+
     it 'imports the key contents from a file' do
       setup_process('gpg --quiet --batch --import ~/secret.pgp', true, '')
 
@@ -235,6 +237,8 @@ sub   2048R/412E5D21 2012-06-14
   end
 
   describe :verify_signature_file do
+    before { allow(File).to receive(:read) }
+
     it 'verifies the signature contents from a file' do
       setup_process('gpg --quiet --batch --verify ~/signature.asc', true, '')
 

@@ -67,10 +67,12 @@ module GPG
     end
 
     def import_key_from_file(path)
+      log("Import Key; path: #{path}; contents:\n#{File.read(path)}")
       run_gpg_silent_command("gpg --quiet --batch --import #{path}")
     end
 
     def verify_signature_file(path)
+      log("Verify Signature; path: #{path}; contents:\n#{File.read(path)}")
       run_gpg_silent_command("gpg --quiet --batch --verify #{path}")
     end
 
