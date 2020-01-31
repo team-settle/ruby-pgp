@@ -252,5 +252,21 @@ sub   2048R/412E5D21 2012-06-14
 
       expect(runner.verify_signature_file('~/signature.asc')).to eq(false)
     end
+
+    it 'verifies and reads the signature contents from a file' do
+      setup_process('gpg --quiet --batch --output ~/output.txt ~/signature.asc', true, '')
+
+      expect(runner.verify_signature_file('~/signature.asc', '~/output.txt')).to eq(true)
+
+      expect(Open3).to have_received(:popen2e)
+    end
+
+    it 'returns false when signature data read fails' do
+      setup_process('gpg --quiet --batch --output ~/output.txt ~/signature.asc', false, '')
+
+      expect(runner.verify_signature_file('~/signature.asc', '~/output.txt')).to eq(false)
+
+      expect(Open3).to have_received(:popen2e)
+    end
   end
 end
