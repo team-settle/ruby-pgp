@@ -60,15 +60,38 @@ describe GPG::Engine do
   end
 
   describe :verify_signature do
+    let(:path1) { random_string }
+    let(:path2) { random_string }
+    let(:stub) { double }
+
+    before {
+      allow(stub).to receive(:path).and_return(path1, path2)
+      allow(stub).to receive(:rewind)
+
+      allow(Tempfile).to receive(:open).and_yield(stub)
+    }
+
     it 'creates a temporary file and verifies the signature data' do
-      temp_file_stub = setup_temp_file('signature contents aaaaa')
-      allow(runner).to receive(:verify_signature_file).with(temp_file_stub.path).and_return(true)
+      allow(stub).to receive(:write).with('signature contents aaaaa')
+      allow(stub).to receive(:read).and_return('signed data')
 
-      expect(engine.verify_signature('signature contents aaaaa')).to eq(true)
+      allow(runner).to receive(:verify_signature_file)
+                           .with(path1, path2)
+                           .and_return(true)
 
-      expect(temp_file_stub).to have_received(:write)
-      expect(temp_file_stub).to have_received(:rewind)
+      expect(engine.verify_signature('signature contents aaaaa')).to eq([true, 'signed data'])
+
+      expect(stub).to have_received(:write)
+      expect(stub).to have_received(:rewind).twice
+      expect(stub).to have_received(:read)
       expect(runner).to have_received(:verify_signature_file)
+    end
+
+    it 'returns no data when verification failed' do
+      allow(stub).to receive(:write)
+      allow(runner).to receive(:verify_signature_file).and_return(false)
+
+      expect(engine.verify_signature('signature contents')).to eq([false, ''])
     end
   end
 end

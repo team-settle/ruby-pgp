@@ -5,7 +5,7 @@ module GPG
     attr_accessor :runner
     attr_accessor :verbose
 
-    def initialize(runner = nil, verbose = false)
+    def initialize(runner = nil, verbose = true)
       self.runner = runner || GPG::Runner.new
       self.verbose = verbose
       self.runner.verbose = self.verbose
@@ -23,9 +23,22 @@ module GPG
     def verify_signature(signature_data)
       log("Verify Signature")
       Tempfile.open do |f|
-        f.write(signature_data)
-        f.rewind
-        runner.verify_signature_file(f.path)
+        Tempfile.open do |f2|
+          f.write(signature_data)
+          f.rewind
+
+          verification = runner.verify_signature_file(f.path, f2.path)
+          data = ''
+
+          if verification
+            f2.rewind
+            data = f2.read
+
+            log("Signature Data:\n#{data}")
+          end
+
+          [verification, data]
+        end
       end
     end
 
