@@ -15,6 +15,7 @@ module GPG
       log("Import Key:\n#{key_contents}")
       Tempfile.open do |f|
         f.write(key_contents)
+        f.rewind
         runner.import_key_from_file(f.path)
       end
     end
@@ -23,6 +24,7 @@ module GPG
       log("Verify Signature:\n#{signature_data}")
       Tempfile.open do |f|
         f.write(signature_data)
+        f.rewind
         runner.verify_signature_file(f.path)
       end
     end

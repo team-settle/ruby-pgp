@@ -3,6 +3,7 @@ module TempHelper
     stub = double
     allow(stub).to receive(:path).and_return(random_string)
     allow(stub).to receive(:write).with(contents)
+    allow(stub).to receive(:rewind)
     allow(Tempfile).to receive(:open).and_yield(stub)
     stub
   end

@@ -54,6 +54,7 @@ describe GPG::Engine do
       expect(engine.import_key('key contents aaaaa')).to eq(true)
 
       expect(temp_file_stub).to have_received(:write)
+      expect(temp_file_stub).to have_received(:rewind)
       expect(runner).to have_received(:import_key_from_file)
     end
   end
@@ -66,6 +67,7 @@ describe GPG::Engine do
       expect(engine.verify_signature('signature contents aaaaa')).to eq(true)
 
       expect(temp_file_stub).to have_received(:write)
+      expect(temp_file_stub).to have_received(:rewind)
       expect(runner).to have_received(:verify_signature_file)
     end
   end
