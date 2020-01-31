@@ -222,7 +222,7 @@ sub   2048R/412E5D21 2012-06-14
     before { allow(File).to receive(:read) }
 
     it 'imports the key contents from a file' do
-      setup_process('gpg --quiet --batch --import ~/secret.pgp', true, '')
+      setup_process('gpg --quiet --batch --import "~/secret.pgp"', true, '')
 
       expect(runner.import_key_from_file('~/secret.pgp')).to eq(true)
 
@@ -230,7 +230,7 @@ sub   2048R/412E5D21 2012-06-14
     end
 
     it 'returns false when the import fails' do
-      setup_process('gpg --quiet --batch --import ~/secret.pgp', false, '')
+      setup_process('gpg --quiet --batch --import "~/secret.pgp"', false, '')
 
       expect(runner.import_key_from_file('~/secret.pgp')).to eq(false)
     end
@@ -240,7 +240,7 @@ sub   2048R/412E5D21 2012-06-14
     before { allow(File).to receive(:read) }
 
     it 'verifies the signature contents from a file' do
-      setup_process('gpg --quiet --batch --verify ~/signature.asc', true, '')
+      setup_process('gpg --quiet --batch --verify "~/signature.asc"', true, '')
 
       expect(runner.verify_signature_file('~/signature.asc')).to eq(true)
 
@@ -248,13 +248,13 @@ sub   2048R/412E5D21 2012-06-14
     end
 
     it 'returns false when verification fails' do
-      setup_process('gpg --quiet --batch --verify ~/signature.asc', false, '')
+      setup_process('gpg --quiet --batch --verify "~/signature.asc"', false, '')
 
       expect(runner.verify_signature_file('~/signature.asc')).to eq(false)
     end
 
     it 'verifies and reads the signature contents from a file' do
-      setup_process('gpg --quiet --batch --output ~/output.txt ~/signature.asc', true, '')
+      setup_process('gpg --quiet --batch --output "~/output.txt" "~/signature.asc"', true, '')
 
       expect(runner.verify_signature_file('~/signature.asc', '~/output.txt')).to eq(true)
 
@@ -262,7 +262,7 @@ sub   2048R/412E5D21 2012-06-14
     end
 
     it 'returns false when signature data read fails' do
-      setup_process('gpg --quiet --batch --output ~/output.txt ~/signature.asc', false, '')
+      setup_process('gpg --quiet --batch --output "~/output.txt" "~/signature.asc"', false, '')
 
       expect(runner.verify_signature_file('~/signature.asc', '~/output.txt')).to eq(false)
 

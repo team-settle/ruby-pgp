@@ -68,16 +68,16 @@ module GPG
 
     def import_key_from_file(path)
       log("Import Key; path: #{path}; contents:\n#{File.read(path)}")
-      run_gpg_silent_command("gpg --quiet --batch --import #{path}")
+      run_gpg_silent_command("gpg --quiet --batch --import \"#{path}\"")
     end
 
     def verify_signature_file(path, data_output_path=nil)
       if data_output_path.nil?
         log("Verify Signature; path: #{path}; contents:\n#{File.read(path)}")
-        run_gpg_silent_command("gpg --quiet --batch --verify #{path}")
+        run_gpg_silent_command("gpg --quiet --batch --verify \"#{path}\"")
       else
         log("Verify Signature; path: #{path}; data_output_path: #{data_output_path}; contents:\n#{File.read(path)}")
-        run_gpg_silent_command("gpg --quiet --batch --output #{data_output_path} #{path}")
+        run_gpg_silent_command("gpg --quiet --batch --output \"#{data_output_path}\" \"#{path}\"")
       end
     end
 
