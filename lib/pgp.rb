@@ -1,4 +1,3 @@
-require 'gpgme'
 require 'pgp/log'
 require 'pgp/keys_importer'
 require 'pgp/decryptor'
