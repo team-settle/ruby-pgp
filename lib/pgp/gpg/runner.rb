@@ -8,40 +8,8 @@ module GPG
       self.verbose = verbose
     end
 
-    # @deprecated this method will go away once we stop using gpgme
-    def default_gpg_is_v2?
-      version_default.start_with? '2.'
-    end
-
-    # @deprecated this method will go away once we stop using gpgme
-    def default_gpg_is_v1?
-      version_default.start_with? '1.'
-    end
-
     def version_default
       read_version('gpg --version', '')
-    end
-
-    # @deprecated this method will go away once we stop using gpgme
-    def version_gpg1
-      read_version('gpg1 --version', '')
-    end
-
-    # @deprecated this method will go away once we stop using gpgme
-    def should_switch_to_gpg1?
-      if default_gpg_is_v1?
-        false
-      else
-        !version_gpg1.empty?
-      end
-    end
-
-    # @deprecated this method will go away once we stop using gpgme
-    def binary_path_gpg1
-      run('which gpg1') do |stdin, output, handle|
-        return '' unless handle.value.success?
-        output.gets.lines.first.strip
-      end
     end
 
     def read_private_key_fingerprints

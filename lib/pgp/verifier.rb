@@ -3,7 +3,6 @@ module PGP
     include PGP::KeysImporter
 
     def verify(signed_data)
-      GPGME::VersionHelper.switch_to_gpg1
       crypto = GPGME::Crypto.new
       output_data = GPGME::Data.empty!
 

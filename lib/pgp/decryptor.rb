@@ -5,7 +5,6 @@ module PGP
     attr_accessor :passphrase
 
     def decrypt(encrypted_data)
-      GPGME::VersionHelper.switch_to_gpg1
       crypto = GPGME::Crypto.new({ pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK })
       crypto.decrypt(encrypted_data, decrypt_options).to_s
     end

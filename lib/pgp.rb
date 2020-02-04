@@ -8,7 +8,6 @@ require 'pgp/signer'
 require 'pgp/private_key'
 require 'pgp/gpg/runner'
 require 'pgp/gpg/engine'
-require 'pgp/gpgme/version_helper'
 
 module PGP
   autoload :VERSION,        'pgp/version'
