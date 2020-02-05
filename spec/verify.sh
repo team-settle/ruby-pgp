@@ -28,8 +28,13 @@ function sectionEnd() {
     echo ''
 }
 
+function printExitCode() {
+    echo "=> $?"
+}
+
 sectionStart 'Setup'
 gpg --version
+printExitCode
 cleanup
 sectionEnd
 
@@ -40,6 +45,7 @@ listKeys
 echo 'Decrypting message'
 rm -f /tmp/msg1.txt
 gpg --quiet --batch --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/unencrypted_file.txt.asc
+printExitCode
 cat /tmp/msg1.txt
 cleanup
 sectionEnd
@@ -50,7 +56,8 @@ gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key_with_
 listKeys
 echo 'Decrypting message'
 rm -f /tmp/msg1.txt
-echo testingpgp | gpg --batch --yes --passphrase-fd 0 --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
+gpg --batch --passphrase "testingpgp" --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
+printExitCode
 cat /tmp/msg1.txt
 cleanup
 sectionEnd
