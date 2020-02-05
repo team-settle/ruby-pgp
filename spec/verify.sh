@@ -28,7 +28,7 @@ function sectionEnd() {
     echo ''
 }
 
-sectionStart "Setup"
+sectionStart 'Setup'
 gpg --version
 cleanup
 sectionEnd
@@ -37,5 +37,9 @@ sectionEnd
 sectionStart 'Decrypt key without passphrase'
 gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key.asc
 listKeys
+
+echo 'Decrypting message'
+gpg --quiet --batch --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/unencrypted_file.txt.asc
+cat /tmp/msg1.txt
 cleanup
 sectionEnd
