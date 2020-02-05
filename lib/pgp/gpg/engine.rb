@@ -6,7 +6,7 @@ module GPG
     attr_accessor :runner
     attr_accessor :verbose
 
-    def initialize(runner = nil, verbose = true)
+    def initialize(runner = nil, verbose = false)
       self.runner = runner || GPG::Runner.new
       self.verbose = verbose
       self.runner.verbose = self.verbose
