@@ -60,35 +60,34 @@ describe GPG::Engine do
   end
 
   describe :verify_signature do
-    let(:path1) { random_string }
-    let(:path2) { random_string }
-    let(:stub) { double }
-
-    before {
-      allow(stub).to receive(:path).and_return(path1, path2)
-      allow(stub).to receive(:rewind)
-
-      allow(Tempfile).to receive(:open).and_yield(stub)
-    }
-
-    it 'creates a temporary file and verifies the signature data' do
-      allow(stub).to receive(:write).with('signature contents aaaaa')
-      allow(stub).to receive(:read).and_return('signed data')
-
+    it 'verifies the signature using the pgp runner' do
+      temp_files = ['path2', 'path1']
+      allow(GPG::TempPathHelper).to receive(:create) do |&block|
+        p = temp_files.pop
+        block.call(p)
+        p
+      end
+      allow(File).to receive(:write).with('path1', 'signature contents')
+      allow(File).to receive(:read).with('path2').and_return('secret plain')
       allow(runner).to receive(:verify_signature_file)
-                           .with(path1, path2)
+                           .with('path1', 'path2')
                            .and_return(true)
 
-      expect(engine.verify_signature('signature contents aaaaa')).to eq([true, 'signed data'])
+      expect(engine.verify_signature('signature contents')).to eq([true, 'secret plain'])
 
-      expect(stub).to have_received(:write)
-      expect(stub).to have_received(:rewind).twice
-      expect(stub).to have_received(:read)
       expect(runner).to have_received(:verify_signature_file)
+      expect(File).to have_received(:write)
+      expect(File).to have_received(:read)
     end
 
     it 'returns no data when verification failed' do
-      allow(stub).to receive(:write)
+      temp_files = ['path2', 'path1']
+      allow(GPG::TempPathHelper).to receive(:create) do |&block|
+        p = temp_files.pop
+        block.call(p)
+        p
+      end
+      allow(File).to receive(:write)
       allow(runner).to receive(:verify_signature_file).and_return(false)
 
       expect(engine.verify_signature('signature contents')).to eq([false, ''])

@@ -23,21 +23,20 @@ module GPG
 
     def verify_signature(signature_data)
       log("Verify Signature")
-      signature_path = File.join(Dir.tmpdir, random_string)
-      output_path = File.join(Dir.tmpdir, random_string)
-      File.delete(output_path) if File.exists?(output_path)
 
-      File.write(signature_path, signature_data)
-      verification = runner.verify_signature_file(signature_path, output_path)
       data = ''
-      if verification
-        data = File.read(output_path)
+      result = false
+
+      GPG::TempPathHelper.create do |path1|
+        GPG::TempPathHelper.create do |path2|
+          File.write(path1, signature_data)
+          result = runner.verify_signature_file(path1, path2)
+
+          data = File.read(path2) if result
+        end
       end
 
-      File.delete(output_path) if File.exists?(output_path)
-      File.delete(signature_path) if File.exists?(signature_path)
-
-      [verification, data]
+      [result, data]
     end
 
     def delete_all_keys
