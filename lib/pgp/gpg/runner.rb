@@ -9,43 +9,43 @@ module GPG
     end
 
     def version_default
-      read_version('gpg --version', '')
+      read_version('gpg2 --version', '')
     end
 
     def read_private_key_fingerprints
-      run('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
+      run('gpg2 --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
-        extract_fingerprints(output.gets)
+        extract_fingerprints(output)
       end
     end
 
     def read_public_key_fingerprints
-      run('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
+      run('gpg2 --quiet --list-keys --fingerprint') do |stdin, output, handle|
         return [] unless handle.value.success?
-        extract_fingerprints(output.gets)
+        extract_fingerprints(output)
       end
     end
 
     def delete_private_key(fingerprint)
-      run_gpg_silent_command("gpg --quiet --batch --delete-secret-key #{fingerprint}")
+      run_gpg_silent_command("gpg2 --quiet --batch --delete-secret-key #{fingerprint}")
     end
 
     def delete_public_key(fingerprint)
-      run_gpg_silent_command("gpg --quiet --batch --delete-key #{fingerprint}")
+      run_gpg_silent_command("gpg2 --quiet --batch --delete-key #{fingerprint}")
     end
 
     def import_key_from_file(path)
       log("Import Key; path: #{path}; contents:\n#{File.read(path)}")
-      run_gpg_silent_command("gpg --quiet --batch --import \"#{path}\"")
+      run_gpg_silent_command("gpg2 --quiet --batch --import \"#{path}\"")
     end
 
     def verify_signature_file(path, data_output_path=nil)
       if data_output_path.nil?
         log("Verify Signature; path: #{path}; contents:\n#{File.read(path)}")
-        run_gpg_silent_command("gpg --quiet --batch --verify \"#{path}\"")
+        run_gpg_silent_command("gpg2 --quiet --batch --verify \"#{path}\"")
       else
         log("Verify Signature; path: #{path}; data_output_path: #{data_output_path}; contents:\n#{File.read(path)}")
-        run_gpg_silent_command("gpg --quiet --batch --output \"#{data_output_path}\" \"#{path}\"")
+        run_gpg_silent_command("gpg2 --quiet --batch --output \"#{data_output_path}\" \"#{path}\"")
       end
     end
 
@@ -60,7 +60,7 @@ module GPG
     def read_version(command, default_value)
       run(command) do |stdin, output, handle|
         return default_value unless handle.value.success?
-        output.gets.lines.first.split(' ').last.strip
+        output.lines.first.split(' ').last.strip
       end
     end
 
@@ -76,11 +76,27 @@ module GPG
       log("Running Command: #{command}")
 
       Open3.popen2e(command) do |stdin, output, handle|
-        log("Output:\n#{output.gets}")
+        output_data = stream_to_string(output)
+
+        log("Output:\n#{output_data}")
         log("Success?: #{handle.value.success?}")
 
-        yield(stdin, output, handle)
+        yield(stdin, output_data, handle)
       end
+    end
+
+    def stream_to_string(stream)
+      result = ''
+      loop do
+        data = stream.gets
+
+        if data.nil?
+          break
+        end
+
+        result << data
+      end
+      result
     end
 
     def log(message)
