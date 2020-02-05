@@ -4,7 +4,7 @@ BASE_DIR='.'
 
 function cleanup() {
   echo 'Cleanup existing keys'
-  rspec ${BASE_DIR}/spec/lib/pgp/gpg/runner_integration_spec.rb
+  rspec ${BASE_DIR}/spec/lib/pgp/gpg/runner_integration_spec.rb > /dev/null
 
   listKeys
 }
