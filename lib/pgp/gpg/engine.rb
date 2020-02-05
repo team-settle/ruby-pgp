@@ -23,8 +23,8 @@ module GPG
 
     def verify_signature(signature_data)
       log("Verify Signature")
-      signature_path = File.join(Dir.tmpdir, 'aaa_sig.txt')
-      output_path = File.join(Dir.tmpdir, 'aaa.txt')
+      signature_path = File.join(Dir.tmpdir, random_string)
+      output_path = File.join(Dir.tmpdir, random_string)
       File.delete(output_path) if File.exists?(output_path)
 
       File.write(signature_path, signature_data)
@@ -33,6 +33,10 @@ module GPG
       if verification
         data = File.read(output_path)
       end
+
+      File.delete(output_path) if File.exists?(output_path)
+      File.delete(signature_path) if File.exists?(signature_path)
+
       [verification, data]
     end
 
@@ -61,6 +65,10 @@ module GPG
       if verbose
         PGP::Log.logger.info(message)
       end
+    end
+
+    def random_string(length=20)
+      (0...length).map { (65 + rand(26)).chr }.join
     end
   end
 end
