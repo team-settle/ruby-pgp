@@ -44,7 +44,7 @@ gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key.asc
 listKeys
 echo 'Decrypting message'
 rm -f /tmp/msg1.txt
-gpg --quiet --batch --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/unencrypted_file.txt.asc
+gpg --quiet --batch --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/unencrypted_file.txt.asc
 printExitCode
 cat /tmp/msg1.txt
 cleanup
@@ -56,7 +56,7 @@ gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key_with_
 listKeys
 echo 'Decrypting message'
 rm -f /tmp/msg1.txt
-gpg --batch --passphrase "testingpgp" --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
+gpg --quiet --batch --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
 printExitCode
 cat /tmp/msg1.txt
 cleanup
