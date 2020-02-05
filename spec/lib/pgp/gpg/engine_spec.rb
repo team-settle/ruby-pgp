@@ -61,12 +61,7 @@ describe GPG::Engine do
 
   describe :verify_signature do
     it 'verifies the signature using the pgp runner' do
-      temp_files = ['path2', 'path1']
-      allow(GPG::TempPathHelper).to receive(:create) do |&block|
-        p = temp_files.pop
-        block.call(p)
-        p
-      end
+      setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write).with('path1', 'signature contents')
       allow(File).to receive(:read).with('path2').and_return('secret plain')
       allow(runner).to receive(:verify_signature_file)
@@ -81,12 +76,7 @@ describe GPG::Engine do
     end
 
     it 'returns no data when verification failed' do
-      temp_files = ['path2', 'path1']
-      allow(GPG::TempPathHelper).to receive(:create) do |&block|
-        p = temp_files.pop
-        block.call(p)
-        p
-      end
+      setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write)
       allow(runner).to receive(:verify_signature_file).and_return(false)
 
