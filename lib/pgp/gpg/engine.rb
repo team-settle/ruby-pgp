@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'tmpdir'
 
 module GPG
   class Engine
@@ -22,24 +23,17 @@ module GPG
 
     def verify_signature(signature_data)
       log("Verify Signature")
-      Tempfile.open do |f|
-        Tempfile.open do |f2|
-          f.write(signature_data)
-          f.rewind
+      signature_path = File.join(Dir.tmpdir, 'aaa_sig.txt')
+      output_path = File.join(Dir.tmpdir, 'aaa.txt')
+      File.delete(output_path) if File.exists?(output_path)
 
-          verification = runner.verify_signature_file(f.path, f2.path)
-          data = ''
-
-          if verification
-            f2.rewind
-            data = f2.read
-
-            log("Signature Data:\n#{data}")
-          end
-
-          [verification, data]
-        end
+      File.write(signature_path, signature_data)
+      verification = runner.verify_signature_file(signature_path, output_path)
+      data = ''
+      if verification
+        data = File.read(output_path)
       end
+      [verification, data]
     end
 
     def delete_all_keys

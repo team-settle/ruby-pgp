@@ -1,19 +1,16 @@
+require 'tmpdir'
+
 module PGP
   class Verifier
     include PGP::KeysImporter
 
     def verify(signed_data)
-      crypto = GPGME::Crypto.new
-      output_data = GPGME::Data.empty!
-
-      signature_valid = false
-      crypto.verify(signed_data, output: output_data) do |signature|
-        signature_valid = signature.valid?
-      end
+      result = GPG::Engine.new.verify_signature(signed_data)
+      signature_valid = result[0]
 
       raise 'Signature could not be verified' unless signature_valid
 
-      output_data.to_s
+      result[1]
     end
   end
 end
