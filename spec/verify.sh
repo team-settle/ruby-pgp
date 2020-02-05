@@ -37,10 +37,23 @@ sectionEnd
 sectionStart 'Decrypt key without passphrase'
 gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key.asc
 listKeys
-
 echo 'Decrypting message'
 rm -f /tmp/msg1.txt
 gpg --quiet --batch --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/unencrypted_file.txt.asc
+cat /tmp/msg1.txt
+cleanup
+sectionEnd
+
+
+sectionStart 'Decrypt key with passphrase'
+gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key_with_passphrase.asc
+listKeys
+echo 'Decrypting message'
+rm -f /tmp/msg1.txt
+# the next command should prompt for the passphrase
+# testingpgp
+# It gets prompted only once. I need to figure out how to pass it as a command parameter
+gpg --quiet --batch --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
 cat /tmp/msg1.txt
 cleanup
 sectionEnd
