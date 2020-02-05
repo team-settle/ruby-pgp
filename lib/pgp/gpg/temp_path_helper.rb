@@ -3,17 +3,14 @@ module GPG
     def self.create(&block)
       path = File.join(Dir.tmpdir, random_string)
 
-      create_internal(path, &block)
-    end
-
-    private
-
-    def self.create_internal(path, &block)
       yield(path) if block
+
       path
     ensure
       delete(path)
     end
+
+    private
 
     def self.delete(path)
       if File.exists?(path)
