@@ -54,10 +54,18 @@ sectionEnd
 sectionStart 'Decrypt key with passphrase'
 gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key_with_passphrase.asc
 listKeys
-echo 'Decrypting message'
+
+echo 'Decrypting message with gpg > 2.1'
 rm -f /tmp/msg1.txt
-gpg --quiet --batch --pinentry-mode loopback  --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
+gpg --quiet --batch --pinentry-mode loopback --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
 printExitCode
 cat /tmp/msg1.txt
+
+echo 'Decrypting message with gpg 2.0'
+rm -f /tmp/msg1.txt
+gpg --quiet --batch --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt ${BASE_DIR}/spec/support/fixtures/encrypted_with_passphrase_key.txt.asc
+printExitCode
+cat /tmp/msg1.txt
+
 cleanup
 sectionEnd
