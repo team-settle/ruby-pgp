@@ -49,6 +49,10 @@ module GPG
       end
     end
 
+    def decrypt_file(path, data_output_path)
+      run_gpg_silent_command("gpg2 --quiet --batch --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+    end
+
     private
 
     def run_gpg_silent_command(command)

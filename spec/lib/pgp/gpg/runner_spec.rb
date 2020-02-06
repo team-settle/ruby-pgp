@@ -175,4 +175,22 @@ sub   2048R/412E5D21 2012-06-14
       expect(Open3).to have_received(:popen2e)
     end
   end
+
+  describe :decrypt_file do
+    context 'without passphrase ' do
+      it 'decrypts a file' do
+        setup_process('gpg2 --quiet --batch --yes --ignore-mdc-error --output "/tmp/plaintext.txt" --decrypt "~/encrypted_text.txt"', true, '')
+
+        expect(runner.decrypt_file('~/encrypted_text.txt', '/tmp/plaintext.txt')).to eq(true)
+
+        expect(Open3).to have_received(:popen2e)
+      end
+
+      it 'returns false when decryption failed' do
+        setup_process('gpg2 --quiet --batch --yes --ignore-mdc-error --output "/tmp/plaintext.txt" --decrypt "~/encrypted_text.txt"', false, '')
+
+        expect(runner.decrypt_file('~/encrypted_text.txt', '/tmp/plaintext.txt')).to eq(false)
+      end
+    end
+  end
 end
