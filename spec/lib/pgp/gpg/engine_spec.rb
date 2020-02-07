@@ -83,4 +83,29 @@ describe GPG::Engine do
       expect(engine.verify_signature('signature contents')).to eq([false, ''])
     end
   end
+
+  describe :decrypt do
+    it 'decrypts the data without passphrase' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write).with('path1', 'encrypted message')
+      allow(File).to receive(:read).with('path2').and_return('the answer is 42')
+      allow(runner).to receive(:decrypt_file)
+                           .with('path1', 'path2', 'supersecret')
+                           .and_return(true)
+
+      expect(engine.decrypt('encrypted message', 'supersecret')).to eq([true, 'the answer is 42'])
+
+      expect(runner).to have_received(:decrypt_file)
+      expect(File).to have_received(:write)
+      expect(File).to have_received(:read)
+    end
+
+    it 'returns no data when decryption failed' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write)
+      allow(runner).to receive(:decrypt_file).and_return(false)
+
+      expect(engine.decrypt('encrypted text')).to eq([false, ''])
+    end
+  end
 end

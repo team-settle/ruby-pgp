@@ -39,6 +39,24 @@ module GPG
       [result, data]
     end
 
+    def decrypt(encrypted_data, passphrase=nil)
+      log("Decrypt")
+
+      data = ''
+      result = false
+
+      GPG::TempPathHelper.create do |path1|
+        GPG::TempPathHelper.create do |path2|
+          File.write(path1, encrypted_data)
+          result = runner.decrypt_file(path1, path2, passphrase)
+
+          data = File.read(path2) if result
+        end
+      end
+
+      [result, data]
+    end
+
     def delete_all_keys
       delete_all_private_keys
       delete_all_public_keys
