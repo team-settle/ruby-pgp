@@ -213,6 +213,26 @@ sub   2048R/412E5D21 2012-06-14
           expect(runner.decrypt_file('~/encrypted_text.txt', '/tmp/plaintext.txt', 'supersecret111')).to eq(false)
         end
       end
+
+      context 'gpg >= 2.1' do
+        before {
+          allow(runner).to receive(:version_default).and_return('2.1.23')
+        }
+
+        it 'decrypts a file' do
+          setup_process('gpg2 --quiet --batch --pinentry-mode loopback --passphrase "supersecret123" --yes --ignore-mdc-error --output "/tmp/plaintext.txt" --decrypt "~/encrypted_text.txt"', true, '')
+
+          expect(runner.decrypt_file('~/encrypted_text.txt', '/tmp/plaintext.txt', 'supersecret123')).to eq(true)
+
+          expect(Open3).to have_received(:popen2e)
+        end
+
+        it 'returns false when decryption failed' do
+          setup_process('gpg2 --quiet --batch --pinentry-mode loopback --passphrase "supersecret123" --yes --ignore-mdc-error --output "/tmp/plaintext.txt" --decrypt "~/encrypted_text.txt"', false, '')
+
+          expect(runner.decrypt_file('~/encrypted_text.txt', '/tmp/plaintext.txt', 'supersecret123')).to eq(false)
+        end
+      end
     end
   end
 end

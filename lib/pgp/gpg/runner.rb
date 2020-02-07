@@ -55,7 +55,11 @@ module GPG
       if passphrase.empty?
         run_gpg_silent_command("gpg2 --quiet --batch --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
       else
-        run_gpg_silent_command("gpg2 --quiet --batch --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+        if version_default.start_with?('2.0.')
+          run_gpg_silent_command("gpg2 --quiet --batch --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+        else
+          run_gpg_silent_command("gpg2 --quiet --batch --pinentry-mode loopback --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+        end
       end
     end
 
