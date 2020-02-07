@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PGP::Decryptor do
+  include KeysHelper
+
   let(:private_key_path)  { Fixtures_Path.join('private_key.asc').to_s }
   let(:public_key_path)   { Fixtures_Path.join('public_key.asc').to_s }
 
@@ -10,6 +12,8 @@ describe PGP::Decryptor do
   let(:encrypted_text)    { File.read(encrypted_file) }
   let(:file_path)         { Fixtures_Path.join('unencrypted_file.txt') }
   let(:unencrypted_text)  { File.read(file_path) }
+
+  before { remove_all_keys }
 
   describe '#decrypt' do
     before {
