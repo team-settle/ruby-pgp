@@ -1,5 +1,3 @@
-require 'tmpdir'
-
 module PGP
   class Verifier
     include PGP::KeysImporter
