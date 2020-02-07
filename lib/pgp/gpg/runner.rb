@@ -49,8 +49,14 @@ module GPG
       end
     end
 
-    def decrypt_file(path, data_output_path)
-      run_gpg_silent_command("gpg2 --quiet --batch --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+    def decrypt_file(path, data_output_path, passphrase=nil)
+      passphrase ||= ''
+
+      if passphrase.empty?
+        run_gpg_silent_command("gpg2 --quiet --batch --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+      else
+        run_gpg_silent_command("gpg2 --quiet --batch --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
+      end
     end
 
     private
