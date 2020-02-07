@@ -51,16 +51,21 @@ module GPG
 
     def decrypt_file(path, data_output_path, passphrase=nil)
       passphrase ||= ''
-
-      if passphrase.empty?
-        run_gpg_silent_command("gpg2 --quiet --batch --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
-      else
-        if version_default.start_with?('2.0.')
-          run_gpg_silent_command("gpg2 --quiet --batch --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
-        else
-          run_gpg_silent_command("gpg2 --quiet --batch --pinentry-mode loopback --passphrase \"#{passphrase}\" --yes --ignore-mdc-error --output \"#{data_output_path}\" --decrypt \"#{path}\"")
-        end
-      end
+      command_pieces = [
+          'gpg2',
+          '--quiet',
+          '--batch',
+          pinentry_mode_command_options(passphrase),
+          passphrase_command_options(passphrase),
+          '--yes',
+          '--ignore-mdc-error',
+          '--output',
+          "\"#{data_output_path}\"",
+          '--decrypt',
+          "\"#{path}\""
+      ]
+      command = command_pieces.reject(&:empty?).join(' ')
+      run_gpg_silent_command(command)
     end
 
     private
@@ -117,6 +122,19 @@ module GPG
       if verbose
         PGP::Log.logger.info(message)
       end
+    end
+
+    def passphrase_command_options(passphrase)
+      return '' if passphrase.empty?
+
+      "--passphrase \"#{passphrase}\""
+    end
+
+    def pinentry_mode_command_options(passphrase)
+      return '' if passphrase.empty?
+      return '' if version_default.start_with?('2.0.')
+
+      '--pinentry-mode loopback'
     end
   end
 end
