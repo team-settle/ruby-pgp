@@ -69,3 +69,39 @@ cat /tmp/msg1.txt
 
 cleanup
 sectionEnd
+
+
+sectionStart 'Encrypt with public key'
+echo 'Import public key'
+gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/public_key.asc
+# https://superuser.com/questions/1297502/gpg2-unusable-public-key-no-assurance-key-belongs-to-named-user
+# select 5, then type trust
+gpg --edit-key "A99BFCC3B6B952D66AFC1F3C48508D311DD34131" trust
+printExitCode
+
+echo 'Encrypt text'
+rm -f /tmp/encrypted1.txt
+echo "FooBar" > /tmp/plaintext1.txt
+gpg --quiet --batch --yes --output /tmp/encrypted1.txt --recipient foo@bar.com --encrypt /tmp/plaintext1.txt
+printExitCode
+cleanup
+
+echo 'Import private key'
+gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key.asc
+printExitCode
+
+echo 'Decrypting message with gpg > 2.1'
+rm -f /tmp/msg1.txt
+gpg --quiet --batch --pinentry-mode loopback --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt /tmp/encrypted1.txt
+printExitCode
+cat /tmp/msg1.txt
+
+echo 'Decrypting message with gpg 2.0'
+rm -f /tmp/msg1.txt
+gpg --quiet --batch --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --decrypt /tmp/encrypted1.txt
+printExitCode
+cat /tmp/msg1.txt
+
+
+cleanup
+sectionEnd
