@@ -23,6 +23,13 @@ describe PGP::Decryptor do
     it "should successfully decrypt an encrypted file" do
       expect(decryptor.decrypt(encrypted_text)).to eq(unencrypted_text)
     end
+
+    describe 'ruby_decryptor' do
+      it 'should successfully decrypt an encrypted file' do
+        actual_text = PGP::RubyDecryptor.decrypt(encrypted_text, private_key_path)
+        expect(actual_text).to eq(unencrypted_text)
+      end
+    end
   end
 
   describe "decrypt with private key and passphrase" do
@@ -31,14 +38,21 @@ describe PGP::Decryptor do
     let(:encrypted_text) { File.read(encrypted_with_passphrase_file) }
     let(:unencrypted_text) { File.read(Fixtures_Path.join('encrypted_with_passphrase_key.txt'))}
     let(:passphrase) { "testingpgp" }
+
     before do
       decryptor.passphrase = passphrase
       decryptor.add_keys_from_file(private_key_with_passphrase_path)
     end
+
     it "should decrypt" do
       expect(decryptor.decrypt(encrypted_text)).to eq(unencrypted_text)
     end
 
+    describe 'ruby_decryptor' do
+      it 'should decrypt' do
+        actual_text = PGP::RubyDecryptor.decrypt(encrypted_text, private_key_path, passphrase)
+        expect(actual_text).to eq(unencrypted_text)
+      end
+    end
   end
-
 end
