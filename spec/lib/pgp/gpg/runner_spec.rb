@@ -36,19 +36,19 @@ sec   2048R/1DD34131 2012-06-14
 uid                  JRuby BG PGP Bug <foo@bar.com>
 ssb   2048R/412E5D21 2012-06-14
 '''
-      setup_process('gpg --quiet --list-secret-keys --fingerprint', true, seeded_output)
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', true, seeded_output)
 
       expect(runner.read_private_key_fingerprints).to eq(fingerprints)
     end
 
     it 'returns empty when there are no secret keys' do
-      setup_process('gpg --quiet --list-secret-keys --fingerprint', true, nil)
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', true, nil)
 
       expect(runner.read_private_key_fingerprints).to eq([])
     end
 
     it 'returns empty when gpg fails' do
-      setup_process('gpg --quiet --list-secret-keys --fingerprint', false, nil)
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', false, nil)
 
       expect(runner.read_private_key_fingerprints).to eq([])
     end
@@ -74,19 +74,19 @@ uid                  JRuby BG PGP Bug <foo@bar.com>
 sub   2048R/412E5D21 2012-06-14
 '''
 
-      setup_process('gpg --quiet --list-keys --fingerprint', true, seeded_output)
+      setup_process('gpg --quiet --list-keys --fingerprint --keyid-format LONG', true, seeded_output)
 
       expect(runner.read_public_key_fingerprints).to eq(fingerprints)
     end
 
     it 'returns empty when there are no public keys' do
-      setup_process('gpg --quiet --list-keys --fingerprint', false, '')
+      setup_process('gpg --quiet --list-keys --fingerprint --keyid-format LONG', false, '')
 
       expect(runner.read_public_key_fingerprints).to eq([])
     end
 
     it 'returns empty when gpg fails' do
-      setup_process('gpg --quiet --list-keys --fingerprint', false, nil)
+      setup_process('gpg --quiet --list-keys --fingerprint --keyid-format LONG', false, nil)
 
       expect(runner.read_public_key_fingerprints).to eq([])
     end

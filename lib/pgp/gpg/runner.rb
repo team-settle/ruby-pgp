@@ -13,14 +13,14 @@ module GPG
     end
 
     def read_private_key_fingerprints
-      run('gpg --quiet --list-secret-keys --fingerprint') do |stdin, output, handle|
+      run('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG') do |stdin, output, handle|
         return [] unless handle.value.success?
         extract_fingerprints(output)
       end
     end
 
     def read_public_key_fingerprints
-      run('gpg --quiet --list-keys --fingerprint') do |stdin, output, handle|
+      run('gpg --quiet --list-keys --fingerprint --keyid-format LONG') do |stdin, output, handle|
         return [] unless handle.value.success?
         extract_fingerprints(output)
       end
