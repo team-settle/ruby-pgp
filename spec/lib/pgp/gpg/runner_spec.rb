@@ -94,7 +94,7 @@ sub   2048R/412E5D21 2012-06-14
 
   describe :delete_private_key do
     it 'deletes they key with the specified fingerprint' do
-      setup_process('gpg --quiet --batch --delete-secret-key AAAAAAA', true, '')
+      setup_process('gpg --quiet --batch --yes --delete-secret-key AAAAAAA', true, '')
 
       expect(runner.delete_private_key('AAAAAAA')).to eq(true)
 
@@ -102,7 +102,7 @@ sub   2048R/412E5D21 2012-06-14
     end
 
     it 'returns false when the deletion fails' do
-      setup_process('gpg --quiet --batch --delete-secret-key AAAAAAA', false, '')
+      setup_process('gpg --quiet --batch --yes --delete-secret-key AAAAAAA', false, '')
 
       expect(runner.delete_private_key('AAAAAAA')).to eq(false)
     end
@@ -110,7 +110,7 @@ sub   2048R/412E5D21 2012-06-14
 
   describe :delete_public_key do
     it 'deletes the public key with the specified fingerprint' do
-      setup_process('gpg --quiet --batch --delete-key AAAAAAA', true, '')
+      setup_process('gpg --quiet --batch --yes --delete-key AAAAAAA', true, '')
 
       expect(runner.delete_public_key('AAAAAAA')).to eq(true)
 
@@ -118,7 +118,7 @@ sub   2048R/412E5D21 2012-06-14
     end
 
     it 'returns false when the deletion fails' do
-      setup_process('gpg --quiet --batch --delete-key AAAAAAA', false, '')
+      setup_process('gpg --quiet --batch --yes --delete-key AAAAAAA', false, '')
 
       expect(runner.delete_public_key('AAAAAAA')).to eq(false)
     end

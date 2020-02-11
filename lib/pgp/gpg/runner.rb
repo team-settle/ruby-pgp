@@ -27,11 +27,11 @@ module GPG
     end
 
     def delete_private_key(fingerprint)
-      run_gpg_silent_command("gpg --quiet --batch --delete-secret-key #{fingerprint}")
+      run_gpg_silent_command("gpg --quiet --batch --yes --delete-secret-key #{fingerprint}")
     end
 
     def delete_public_key(fingerprint)
-      run_gpg_silent_command("gpg --quiet --batch --delete-key #{fingerprint}")
+      run_gpg_silent_command("gpg --quiet --batch --yes --delete-key #{fingerprint}")
     end
 
     def import_key_from_file(path)
