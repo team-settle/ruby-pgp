@@ -74,15 +74,12 @@ sectionEnd
 sectionStart 'Encrypt with public key'
 echo 'Import public key'
 gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/public_key.asc
-# https://superuser.com/questions/1297502/gpg2-unusable-public-key-no-assurance-key-belongs-to-named-user
-# select 5, then type trust
-gpg --edit-key "A99BFCC3B6B952D66AFC1F3C48508D311DD34131"
 printExitCode
 
 echo 'Encrypt text'
 rm -f /tmp/encrypted1.txt
 echo "FooBar" > /tmp/plaintext1.txt
-gpg --quiet --batch --yes --output /tmp/encrypted1.txt --recipient foo@bar.com --encrypt /tmp/plaintext1.txt
+gpg --quiet --batch --yes --output /tmp/encrypted1.txt --recipient foo@bar.com --trust-model always --encrypt /tmp/plaintext1.txt
 printExitCode
 cleanup
 
