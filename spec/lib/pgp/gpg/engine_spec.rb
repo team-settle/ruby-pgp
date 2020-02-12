@@ -139,6 +139,31 @@ describe GPG::Engine do
     end
   end
 
+  describe :sign do
+    it 'signs the data with a passphrase' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write).with('path1', 'plain text message')
+      allow(File).to receive(:read).with('path2').and_return('encrypted signature')
+      allow(runner).to receive(:sign_file)
+                           .with('path1', 'path2', 'supersecret')
+                           .and_return(true)
+
+      expect(engine.sign('plain text message', 'supersecret')).to eq([true, 'encrypted signature'])
+
+      expect(runner).to have_received(:sign_file)
+      expect(File).to have_received(:write)
+      expect(File).to have_received(:read)
+    end
+
+    it 'returns no data when signing failed' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write)
+      allow(runner).to receive(:sign_file).and_return(false)
+
+      expect(engine.sign('something')).to eq([false, ''])
+    end
+  end
+
   describe :read_recipients do
     it 'merges the private and public recipients' do
       allow(runner).to receive(:read_public_key_recipients).and_return([
