@@ -92,6 +92,43 @@ sub   2048R/412E5D21 2012-06-14
     end
   end
 
+  describe :read_private_key_recipients do
+    it 'reads all the private key recipients' do
+      recipients = [
+          'superchrisnelson@gmail.com',
+          'foo@bar.com'
+      ]
+      seeded_output = '''
+/root/.gnupg/secring.gpg
+------------------------
+sec   2048R/3388EE24 2013-03-04
+      Key fingerprint = 23AD 063A 33C2 EBE0 9F9A  71ED 9539 E22A 3388 EE24
+uid                  Chris Nelson <superchrisnelson@gmail.com>
+ssb   2048R/349BAAD3 2013-03-04
+
+sec   2048R/1DD34131 2012-06-14
+      Key fingerprint = A99B FCC3 B6B9 52D6 6AFC  1F3C 4850 8D31 1DD3 4131
+uid                  JRuby BG PGP Bug <foo@bar.com>
+ssb   2048R/412E5D21 2012-06-14
+'''
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', true, seeded_output)
+
+      expect(runner.read_private_key_recipients).to eq(recipients)
+    end
+
+    it 'returns empty when there are no secret keys' do
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', true, nil)
+
+      expect(runner.read_private_key_recipients).to eq([])
+    end
+
+    it 'returns empty when gpg fails' do
+      setup_process('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG', false, nil)
+
+      expect(runner.read_private_key_recipients).to eq([])
+    end
+  end
+
   describe :delete_private_key do
     it 'deletes they key with the specified fingerprint' do
       setup_process('gpg --quiet --batch --yes --delete-secret-key AAAAAAA', true, '')

@@ -12,6 +12,13 @@ module GPG
       read_version('gpg --version', '')
     end
 
+    def read_private_key_recipients
+      run('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG') do |stdin, output, handle|
+        return [] unless handle.value.success?
+        extract_recipients(output)
+      end
+    end
+
     def read_private_key_fingerprints
       run('gpg --quiet --list-secret-keys --fingerprint --keyid-format LONG') do |stdin, output, handle|
         return [] unless handle.value.success?
@@ -89,6 +96,15 @@ module GPG
           .filter { |l| l.downcase.include? 'key fingerprint =' }
           .map { |l| l.split('=').last }
           .map { |l| l.gsub(' ', '').strip }
+    end
+
+    def extract_recipients(str)
+      (str || '')
+          .lines
+          .map { |l| l.scan(/\<(.+)\>/m) }
+          .flatten
+          .reject(&:empty?)
+          .uniq
     end
 
     def run(command)
