@@ -128,9 +128,5 @@ module GPG
         PGP::Log.logger.info(message)
       end
     end
-
-    def random_string(length=20)
-      (0...length).map { (65 + rand(26)).chr }.join
-    end
   end
 end
