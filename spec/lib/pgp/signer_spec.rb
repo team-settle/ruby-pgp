@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PGP::Signer do
+  include KeysHelper
+
   let(:private_key_path)   { Fixtures_Path.join('private_key_with_passphrase.asc').to_s }
   let(:public_key_path)   { Fixtures_Path.join('public_key_with_passphrase.asc').to_s }
 
@@ -19,6 +21,8 @@ describe PGP::Signer do
     verifier.add_keys_from_file(public_key_path)
     verifier
   end
+
+  before { remove_all_keys }
 
   describe '#sign' do
 
