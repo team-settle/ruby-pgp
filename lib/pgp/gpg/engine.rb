@@ -26,6 +26,8 @@ module GPG
     def verify_signature(signature_data)
       log("Verify Signature")
 
+      validate_gpg_version
+
       data = ''
       result = false
 

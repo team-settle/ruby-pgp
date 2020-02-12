@@ -99,6 +99,7 @@ describe GPG::Engine do
 
   describe :verify_signature do
     it 'verifies the signature using the pgp runner' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write).with('path1', 'signature contents')
       allow(File).to receive(:read).with('path2').and_return('secret plain')
@@ -114,11 +115,20 @@ describe GPG::Engine do
     end
 
     it 'returns no data when verification failed' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write)
       allow(runner).to receive(:verify_signature_file).and_return(false)
 
       expect(engine.verify_signature('signature contents')).to eq([false, ''])
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.verify_signature('aaaaaaaaaa')
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 
