@@ -50,7 +50,10 @@ module GPG
 
     def import_key_from_file(path)
       log("Import Key; path: #{path}; contents:\n#{File.read(path)}")
-      run_gpg_silent_command("gpg --quiet --batch --import \"#{path}\"")
+      command = "gpg --batch -v --import \"#{path}\""
+      run(command) do |stdin, output, handle|
+        extract_recipients(output)
+      end
     end
 
     def verify_signature_file(path, data_output_path=nil)

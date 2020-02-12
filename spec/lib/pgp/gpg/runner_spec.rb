@@ -201,18 +201,58 @@ ssb   2048R/412E5D21 2012-06-14
   describe :import_key_from_file do
     before { allow(File).to receive(:read) }
 
-    it 'imports the key contents from a file' do
-      setup_process('gpg --quiet --batch --import "~/secret.pgp"', true, '')
+    it 'imports the key contents from a file and returns the recipients' do
+      output = '''
+Version: GnuPG v1.4.12 (Darwin)
+gpg: armor header:
+Chris Nelson <superchrisnelson@gmail.com>gpg: sec  2048R/3388EE24 2013-03-04
+gpg: key 3388EE24: secret key imported
+gpg: pub  2048R/3388EE24 2013-03-04  Chris Nelson <superchrisnelson@gmail.com>
+gpg: pub  2048R/3388EE24 2013-03-04  John Doe <jdoe@gmail.com>
+gpg: using PGP trust model
+gpg: key 3388EE24: public key "Chris Nelson <superchrisnelson@gmail.com>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
+'''
+      setup_process('gpg --batch -v --import "~/secret.pgp"', true, output)
 
-      expect(runner.import_key_from_file('~/secret.pgp')).to eq(true)
+      expect(runner.import_key_from_file('~/secret.pgp')).to eq([
+        'superchrisnelson@gmail.com',
+        'jdoe@gmail.com'
+      ])
 
       expect(Open3).to have_received(:popen2e)
     end
 
-    it 'returns false when the import fails' do
-      setup_process('gpg --quiet --batch --import "~/secret.pgp"', false, '')
+    it 'returns the recipients even when the import does not return success' do
+      output = '''
+gpg: armor header: Version: GnuPG v1.4.12 (Darwin)
+gpg: sec  rsa2048/9539E22A3388EE24 2013-03-04   Chris Nelson <superchrisnelson@gmail.com>
+gpg: sec  rsa2048/9539E22A3388EE24 2013-03-04   John Doe <jdoe@gmail.com>
+gpg: pub  rsa2048/9539E22A3388EE24 2013-03-04  Chris Nelson <superchrisnelson@gmail.com>
+gpg: key 9539E22A3388EE24: "Chris Nelson <superchrisnelson@gmail.com>" not changed
+gpg: key 9539E22A3388EE24/9539E22A3388EE24: secret key already exists
+gpg: key 9539E22A3388EE24/A09B286C349BAAD3: secret key already exists
+gpg: key 9539E22A3388EE24: secret key imported
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg:       secret keys read: 1
+gpg:  secret keys unchanged: 1
+'''
+      setup_process('gpg --batch -v --import "~/secret.pgp"', false, output)
 
-      expect(runner.import_key_from_file('~/secret.pgp')).to eq(false)
+      expect(runner.import_key_from_file('~/secret.pgp')).to eq([
+        'superchrisnelson@gmail.com',
+        'jdoe@gmail.com'
+      ])
+    end
+
+    it 'returns empty when the output is empty' do
+      setup_process('gpg --batch -v --import "~/secret.pgp"', false, '')
+
+      expect(runner.import_key_from_file('~/secret.pgp')).to eq([])
     end
   end
 
