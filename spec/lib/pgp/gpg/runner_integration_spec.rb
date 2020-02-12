@@ -6,6 +6,7 @@ describe GPG::Runner do
   let(:runner) { GPG::Runner.new(verbose: true) }
 
   before { remove_all_keys }
+  after { remove_all_keys }
 
   it 'has no keys by default' do
     expect(runner.read_private_key_fingerprints).to eq([])
