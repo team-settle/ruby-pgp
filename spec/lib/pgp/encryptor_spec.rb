@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe PGP::Encryptor do
+  include KeysHelper
+
   let(:private_key_path)  { Fixtures_Path.join('private_key.asc').to_s }
   let(:public_key_path)   { Fixtures_Path.join('public_key.asc').to_s }
 
   let(:encryptor) { PGP::Encryptor.new }
   let(:string) { "FooBar" }
+
+  before { remove_all_keys }
 
   describe '#initialize' do
     let(:encryptor) { PGP::Encryptor.new(File.read public_key_path) }
