@@ -14,6 +14,7 @@ module GPG
 
     def import_key(key_contents)
       log("Import Key")
+      validate_gpg_version
       Tempfile.open do |f|
         f.write(key_contents)
         f.rewind

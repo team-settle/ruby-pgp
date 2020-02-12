@@ -74,6 +74,7 @@ describe GPG::Engine do
 
   describe :import_key do
     it 'creates a temporary file and imports the key' do
+      setup_valid_gpg_version
       temp_file_stub = setup_temp_file('key contents aaaaa')
       allow(runner).to receive(:import_key_from_file).with(temp_file_stub.path).and_return([
         'email1@gmail.com',
@@ -85,6 +86,14 @@ describe GPG::Engine do
       expect(temp_file_stub).to have_received(:write)
       expect(temp_file_stub).to have_received(:rewind)
       expect(runner).to have_received(:import_key_from_file)
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.import_key('aaaaaaaaaa')
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 
