@@ -88,6 +88,8 @@ module GPG
           'gpg',
           '--quiet',
           '--batch',
+          pinentry_mode_command_options(passphrase),
+          passphrase_command_options(passphrase),
           '--yes',
           '--ignore-mdc-error',
           '--output',

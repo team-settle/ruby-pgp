@@ -326,6 +326,48 @@ ssb   2048R/412E5D21 2012-06-14
         expect(runner.sign_file('~/plaintext.txt', '/tmp/signed.txt')).to eq(false)
       end
     end
+
+    context 'with passphrase' do
+      context 'gpg 2.0' do
+        before {
+          allow(runner).to receive(:version_default).and_return('2.0.4')
+        }
+
+        it 'signs a file' do
+          setup_process('gpg --quiet --batch --passphrase "supersecret111" --yes --ignore-mdc-error --output "/tmp/signed.txt" --sign "~/plaintext.txt"', true, '')
+
+          expect(runner.sign_file('~/plaintext.txt', '/tmp/signed.txt', 'supersecret111')).to eq(true)
+
+          expect(Open3).to have_received(:popen2e)
+        end
+
+        it 'returns false when signing failed' do
+          setup_process('gpg --quiet --batch --passphrase "supersecret111" --yes --ignore-mdc-error --output "/tmp/signed.txt" --sign "~/plaintext.txt"', false, '')
+
+          expect(runner.sign_file('~/plaintext.txt', '/tmp/signed.txt', 'supersecret111')).to eq(false)
+        end
+      end
+
+      context 'gpg >= 2.1' do
+        before {
+          allow(runner).to receive(:version_default).and_return('2.1.23')
+        }
+
+        it 'signs a file' do
+          setup_process('gpg --quiet --batch --pinentry-mode loopback --passphrase "supersecret123" --yes --ignore-mdc-error --output "/tmp/output.txt" --sign "~/plaintext.txt"', true, '')
+
+          expect(runner.sign_file('~/plaintext.txt', '/tmp/output.txt', 'supersecret123')).to eq(true)
+
+          expect(Open3).to have_received(:popen2e)
+        end
+
+        it 'returns false when signing failed' do
+          setup_process('gpg --quiet --batch --pinentry-mode loopback --passphrase "supersecret123" --yes --ignore-mdc-error --output "/tmp/output.txt" --sign "~/plaintext.txt"', false, '')
+
+          expect(runner.sign_file('~/plaintext.txt', '/tmp/output.txt', 'supersecret123')).to eq(false)
+        end
+      end
+    end
   end
 
   describe :encrypt_file do
