@@ -88,6 +88,8 @@ module GPG
     def sign(plaintext_data, passphrase=nil)
       log("Sign")
 
+      validate_gpg_version
+
       data = ''
       result = false
 
