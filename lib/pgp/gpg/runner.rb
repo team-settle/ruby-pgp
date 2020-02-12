@@ -2,7 +2,7 @@ require 'open3'
 
 module GPG
   class Runner
-    include PGP::LogHelper
+    include PGP::LogCapable
 
     attr_accessor :version_cache
 

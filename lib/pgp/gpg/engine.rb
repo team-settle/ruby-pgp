@@ -3,7 +3,7 @@ require 'tmpdir'
 
 module GPG
   class Engine
-    include PGP::LogHelper
+    include PGP::LogCapable
 
     attr_accessor :runner
 

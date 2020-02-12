@@ -1,5 +1,4 @@
 require 'pgp/log'
-require 'pgp/log_helper'
 require 'pgp/keys_importer'
 require 'pgp/decryptor'
 require 'pgp/encryptor'
