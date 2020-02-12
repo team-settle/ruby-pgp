@@ -245,6 +245,7 @@ describe GPG::Engine do
 
   describe :read_recipients do
     it 'merges the private and public recipients' do
+      setup_valid_gpg_version
       allow(runner).to receive(:read_public_key_recipients).and_return([
         'email1@gmail.com',
         'email1@gmail.com',
@@ -262,6 +263,14 @@ describe GPG::Engine do
         'email3@gmail.com',
         'email4@gmail.com'
       ])
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.read_recipients
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 end

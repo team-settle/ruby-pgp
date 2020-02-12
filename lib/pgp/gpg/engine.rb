@@ -127,6 +127,7 @@ module GPG
     end
 
     def read_recipients
+      validate_gpg_version
       public_recipients = runner.read_public_key_recipients
       private_recipients = runner.read_private_key_recipients
       (public_recipients + private_recipients).uniq
