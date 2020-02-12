@@ -114,6 +114,31 @@ describe GPG::Engine do
     end
   end
 
+  describe :encrypt do
+    it 'encrypts the data' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write).with('path1', 'plain text message')
+      allow(File).to receive(:read).with('path2').and_return('encrypted text')
+      allow(runner).to receive(:encrypt_file)
+                           .with('path1', 'path2', ['email1@gmail.com', 'email2@gmail.com'])
+                           .and_return(true)
+
+      expect(engine.encrypt('plain text message', ['email1@gmail.com', 'email2@gmail.com'])).to eq([true, 'encrypted text'])
+
+      expect(runner).to have_received(:encrypt_file)
+      expect(File).to have_received(:write)
+      expect(File).to have_received(:read)
+    end
+
+    it 'returns no data when encryption failed' do
+      setup_temp_paths(['path2', 'path1'])
+      allow(File).to receive(:write)
+      allow(runner).to receive(:encrypt_file).and_return(false)
+
+      expect(engine.encrypt('some text', ['aaa@gmail.com'])).to eq([false, ''])
+    end
+  end
+
   describe :read_recipients do
     it 'merges the private and public recipients' do
       allow(runner).to receive(:read_public_key_recipients).and_return([
