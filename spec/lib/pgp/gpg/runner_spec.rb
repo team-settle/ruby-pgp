@@ -309,4 +309,12 @@ ssb   2048R/412E5D21 2012-06-14
       end
     end
   end
+
+  describe :encrypt_file do
+    it 'encrypts a file' do
+      setup_process('gpg --quiet --batch --yes --output "/tmp/out.txt" --recipient "foo@bar.com" --trust-model always --encrypt "/tmp/in.txt"', true, '')
+
+      expect(runner.encrypt_file('/tmp/in.txt', '/tmp/out.txt', ['foo@bar.com'])).to eq(true)
+    end
+  end
 end
