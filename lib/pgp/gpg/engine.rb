@@ -18,11 +18,7 @@ module GPG
         f.write(key_contents)
         f.rewind
 
-        recipients_before = read_recipients
-
         runner.import_key_from_file(f.path)
-
-        read_recipients - recipients_before
       end
     end
 
