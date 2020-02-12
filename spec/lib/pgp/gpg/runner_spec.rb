@@ -322,5 +322,11 @@ ssb   2048R/412E5D21 2012-06-14
 
       expect(runner.encrypt_file('/tmp/in.txt', '/tmp/out.txt', ['foo@bar.com', 'aaaa@yahoo.com'])).to eq(true)
     end
+
+    it 'returns false when encryption failed' do
+      setup_process('gpg --quiet --batch --yes --output "/tmp/out.txt" --recipient "foo@bar.com" --trust-model always --encrypt "/tmp/in.txt"', false, '')
+
+      expect(runner.encrypt_file('/tmp/in.txt', '/tmp/out.txt', ['foo@bar.com'])).to eq(false)
+    end
   end
 end
