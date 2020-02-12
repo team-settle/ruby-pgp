@@ -99,6 +99,26 @@ gpg --quiet --batch --passphrase "testingpgp" --yes --ignore-mdc-error --output 
 printExitCode
 cat /tmp/msg1.txt
 
+cleanup
+sectionEnd
+
+
+sectionStart 'Sign a file with passphrase'
+gpg --quiet --batch --import ${BASE_DIR}/spec/support/fixtures/private_key_with_passphrase.asc
+printExitCode
+
+echo 'Sign message with gpg > 2.1'
+rm -f /tmp/msg1.txt
+gpg --quiet --batch --pinentry-mode loopback --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --sign ${BASE_DIR}/spec/support/fixtures/signed_file.txt
+printExitCode
+cat /tmp/msg1.txt
+
+echo 'Sign message with gpg 2.0'
+rm -f /tmp/msg1.txt
+gpg --quiet --batch --passphrase "testingpgp" --yes --ignore-mdc-error --output /tmp/msg1.txt --sign ${BASE_DIR}/spec/support/fixtures/signed_file.txt
+printExitCode
+cat /tmp/msg1.txt
+
 
 cleanup
 sectionEnd
