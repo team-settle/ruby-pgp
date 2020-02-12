@@ -111,6 +111,7 @@ module GPG
 
     def delete_all_public_keys
       log('Delete all public keys')
+      validate_gpg_version
       runner.read_public_key_fingerprints.each do |k|
         runner.delete_public_key k
       end

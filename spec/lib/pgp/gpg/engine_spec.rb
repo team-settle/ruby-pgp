@@ -37,6 +37,7 @@ describe GPG::Engine do
 
   describe :delete_all_public_keys do
     it 'deletes all the public keys' do
+      setup_valid_gpg_version
       allow(runner).to receive(:read_public_key_fingerprints).and_return(['fp1', 'fp2'])
       allow(runner).to receive(:delete_public_key)
 
@@ -44,6 +45,14 @@ describe GPG::Engine do
 
       expect(runner).to have_received(:delete_public_key).with('fp1')
       expect(runner).to have_received(:delete_public_key).with('fp2')
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.delete_all_public_keys
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 
