@@ -3,13 +3,18 @@ require 'open3'
 module GPG
   class Runner
     attr_accessor :verbose
+    attr_accessor :version_cache
 
     def initialize(verbose = false)
       self.verbose = verbose
     end
 
     def version_default
-      read_version('gpg --version', '')
+      if self.version_cache.nil?
+        self.version_cache = read_version('gpg --version', '')
+      end
+
+      self.version_cache
     end
 
     def read_private_key_recipients
