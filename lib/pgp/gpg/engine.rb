@@ -3,13 +3,12 @@ require 'tmpdir'
 
 module GPG
   class Engine
-    attr_accessor :runner
-    attr_accessor :verbose
+    include PGP::LogHelper
 
-    def initialize(runner = nil, verbose = false)
+    attr_accessor :runner
+
+    def initialize(runner = nil)
       self.runner = runner || GPG::Runner.new
-      self.verbose = verbose
-      self.runner.verbose = self.verbose
     end
 
     def import_key(key_contents)
@@ -134,12 +133,6 @@ module GPG
     end
 
     protected
-
-    def log(message)
-      if verbose
-        PGP::Log.logger.info(message)
-      end
-    end
 
     def validate_gpg_version
       raise 'GPG Version is incorrect' unless runner.version_default.start_with?('2.')

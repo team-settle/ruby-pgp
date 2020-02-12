@@ -2,12 +2,9 @@ require 'open3'
 
 module GPG
   class Runner
-    attr_accessor :verbose
-    attr_accessor :version_cache
+    include PGP::LogHelper
 
-    def initialize(verbose = false)
-      self.verbose = verbose
-    end
+    attr_accessor :version_cache
 
     def version_default
       if self.version_cache.nil?
@@ -174,12 +171,6 @@ module GPG
         result << data
       end
       result
-    end
-
-    def log(message)
-      if verbose
-        PGP::Log.logger.info(message)
-      end
     end
 
     def passphrase_command_options(passphrase)

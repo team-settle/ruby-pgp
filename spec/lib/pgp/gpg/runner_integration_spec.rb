@@ -3,10 +3,17 @@ require 'spec_helper'
 describe GPG::Runner do
   include KeysHelper
 
-  let(:runner) { GPG::Runner.new(verbose: true) }
+  let(:runner) { GPG::Runner.new }
 
-  before { remove_all_keys }
-  after { remove_all_keys }
+  before {
+    PGP::Log.verbose = true
+    remove_all_keys
+  }
+
+  after {
+    remove_all_keys
+    PGP::Log.verbose = false
+  }
 
   it 'has no keys by default' do
     expect(runner.read_private_key_fingerprints).to eq([])
