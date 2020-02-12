@@ -6,8 +6,17 @@ describe GPG::Engine do
   let(:engine) { GPG::Engine.new }
   let(:runner) { engine.runner }
 
+  def setup_valid_gpg_version
+    allow(runner).to receive(:version_default).and_return('2.0.4')
+  end
+
+  def setup_invalid_gpg_version
+    allow(runner).to receive(:version_default).and_return('1.9.14')
+  end
+
   describe :delete_all_private_keys do
     it 'deletes all the private keys' do
+      setup_valid_gpg_version
       allow(runner).to receive(:read_private_key_fingerprints).and_return(['fp1', 'fp2'])
       allow(runner).to receive(:delete_private_key)
 
@@ -15,6 +24,14 @@ describe GPG::Engine do
 
       expect(runner).to have_received(:delete_private_key).with('fp1')
       expect(runner).to have_received(:delete_private_key).with('fp2')
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.delete_all_private_keys
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 

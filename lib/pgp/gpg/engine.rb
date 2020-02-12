@@ -103,6 +103,7 @@ module GPG
 
     def delete_all_private_keys
       log('Delete all private keys')
+      validate_gpg_version
       runner.read_private_key_fingerprints.each do |k|
         runner.delete_private_key k
       end
@@ -127,6 +128,10 @@ module GPG
       if verbose
         PGP::Log.logger.info(message)
       end
+    end
+
+    def validate_gpg_version
+      raise 'GPG Version is incorrect' unless runner.version_default.start_with?('2.')
     end
   end
 end
