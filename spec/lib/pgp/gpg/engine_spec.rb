@@ -48,10 +48,15 @@ describe GPG::Engine do
 
   describe :import_key do
     it 'creates a temporary file and imports the key' do
+      allow(engine).to receive(:read_recipients).and_return(
+          ['aaa@gmail.com'],
+          ['aaa@gmail.com', 'bbb@gmail.com', 'ccc@gmail.com']
+      )
+
       temp_file_stub = setup_temp_file('key contents aaaaa')
       allow(runner).to receive(:import_key_from_file).with(temp_file_stub.path).and_return(true)
 
-      expect(engine.import_key('key contents aaaaa')).to eq(true)
+      expect(engine.import_key('key contents aaaaa')).to eq(['bbb@gmail.com', 'ccc@gmail.com'])
 
       expect(temp_file_stub).to have_received(:write)
       expect(temp_file_stub).to have_received(:rewind)
