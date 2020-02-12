@@ -90,7 +90,7 @@ describe GPG::Engine do
   end
 
   describe :decrypt do
-    it 'decrypts the data without passphrase' do
+    it 'decrypts the data with a passphrase' do
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write).with('path1', 'encrypted message')
       allow(File).to receive(:read).with('path2').and_return('the answer is 42')
