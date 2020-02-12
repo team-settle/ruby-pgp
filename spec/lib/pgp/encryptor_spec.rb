@@ -22,6 +22,10 @@ describe PGP::Encryptor do
   end
 
   describe '#encrypt' do
+    after {
+      File.delete("some filename.txt") if File.exists?("some filename.txt")
+    }
+
     context 'When the Public Key is from a file' do
       before {
         encryptor.add_keys_from_file(public_key_path)
@@ -30,6 +34,7 @@ describe PGP::Encryptor do
       it "it's encrypted string should be decryptable. durr" do
         encrypted_string = encryptor.encrypt(string, "some filename.txt")
 
+        expect(File.read("some filename.txt")).to eq(encrypted_string)
         expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
 
@@ -48,6 +53,7 @@ describe PGP::Encryptor do
       it "it's encrypted string should be decryptable. durr" do
         encrypted_string = encryptor.encrypt(string, "some filename.txt")
 
+        expect(File.read("some filename.txt")).to eq(encrypted_string)
         expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
       end
 
