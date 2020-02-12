@@ -130,6 +130,12 @@ describe GPG::Engine do
       expect(File).to have_received(:read)
     end
 
+    it 'raises an error when the recipient parameters are empty' do
+      expect {
+        engine.encrypt('some text', [])
+      }.to raise_exception 'Recipients cannot be empty'
+    end
+
     it 'returns no data when encryption failed' do
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write)

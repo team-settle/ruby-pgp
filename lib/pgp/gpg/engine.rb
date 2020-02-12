@@ -65,6 +65,8 @@ module GPG
     def encrypt(plaintext_data, recipients)
       log("Encrypt")
 
+      raise 'Recipients cannot be empty' if recipients.empty?
+
       data = ''
       result = false
 
