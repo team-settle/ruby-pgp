@@ -134,6 +134,7 @@ describe GPG::Engine do
 
   describe :decrypt do
     it 'decrypts the data with a passphrase' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write).with('path1', 'encrypted message')
       allow(File).to receive(:read).with('path2').and_return('the answer is 42')
@@ -149,11 +150,20 @@ describe GPG::Engine do
     end
 
     it 'returns no data when decryption failed' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write)
       allow(runner).to receive(:decrypt_file).and_return(false)
 
       expect(engine.decrypt('encrypted text')).to eq([false, ''])
+    end
+
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.decrypt('aaaaaaaaaa')
+      }.to raise_exception('GPG Version is incorrect')
     end
   end
 

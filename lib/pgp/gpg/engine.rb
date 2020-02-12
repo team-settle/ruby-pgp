@@ -46,6 +46,8 @@ module GPG
     def decrypt(encrypted_data, passphrase=nil)
       log("Decrypt")
 
+      validate_gpg_version
+
       data = ''
       result = false
 
