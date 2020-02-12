@@ -108,4 +108,26 @@ describe GPG::Engine do
       expect(engine.decrypt('encrypted text')).to eq([false, ''])
     end
   end
+
+  describe :read_recipients do
+    it 'merges the private and public recipients' do
+      allow(runner).to receive(:read_public_key_recipients).and_return([
+        'email1@gmail.com',
+        'email1@gmail.com',
+        'email2@gmail.com',
+        'email3@gmail.com'
+      ])
+      allow(runner).to receive(:read_private_key_recipients).and_return([
+        'email3@gmail.com',
+        'email4@gmail.com'
+      ])
+
+      expect(engine.read_recipients).to eq([
+        'email1@gmail.com',
+        'email2@gmail.com',
+        'email3@gmail.com',
+        'email4@gmail.com'
+      ])
+    end
+  end
 end

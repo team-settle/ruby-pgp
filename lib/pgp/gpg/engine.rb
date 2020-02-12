@@ -76,6 +76,12 @@ module GPG
       end
     end
 
+    def read_recipients
+      public_recipients = runner.read_public_key_recipients
+      private_recipients = runner.read_private_key_recipients
+      (public_recipients + private_recipients).uniq
+    end
+
     protected
 
     def log(message)
