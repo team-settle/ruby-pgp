@@ -169,6 +169,7 @@ describe GPG::Engine do
 
   describe :encrypt do
     it 'encrypts the data' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write).with('path1', 'plain text message')
       allow(File).to receive(:read).with('path2').and_return('encrypted text')
@@ -183,6 +184,14 @@ describe GPG::Engine do
       expect(File).to have_received(:read)
     end
 
+    it 'fails when gpg is not correctly installed' do
+      setup_invalid_gpg_version
+
+      expect{
+        engine.encrypt('some text', ['aaa@gmail.com'])
+      }.to raise_exception('GPG Version is incorrect')
+    end
+
     it 'raises an error when the recipient parameters are empty' do
       expect {
         engine.encrypt('some text', [])
@@ -190,6 +199,7 @@ describe GPG::Engine do
     end
 
     it 'returns no data when encryption failed' do
+      setup_valid_gpg_version
       setup_temp_paths(['path2', 'path1'])
       allow(File).to receive(:write)
       allow(runner).to receive(:encrypt_file).and_return(false)

@@ -68,6 +68,8 @@ module GPG
 
       raise 'Recipients cannot be empty' if recipients.empty?
 
+      validate_gpg_version
+
       data = ''
       result = false
 
