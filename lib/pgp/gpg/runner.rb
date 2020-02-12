@@ -82,6 +82,23 @@ module GPG
       run_gpg_silent_command(command)
     end
 
+    def sign_file(path, data_output_path, passphrase=nil)
+      passphrase ||= ''
+      command_pieces = [
+          'gpg',
+          '--quiet',
+          '--batch',
+          '--yes',
+          '--ignore-mdc-error',
+          '--output',
+          "\"#{data_output_path}\"",
+          '--sign',
+          "\"#{path}\""
+      ]
+      command = command_pieces.reject(&:empty?).join(' ')
+      run_gpg_silent_command(command)
+    end
+
     def encrypt_file(path, data_output_path, recipients)
       recipients_str = recipients
                            .map { |s| "--recipient \"#{s}\"" }

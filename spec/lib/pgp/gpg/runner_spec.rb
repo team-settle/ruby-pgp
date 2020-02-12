@@ -310,6 +310,24 @@ ssb   2048R/412E5D21 2012-06-14
     end
   end
 
+  describe :sign_file do
+    context 'without passphrase' do
+      it 'signs a file' do
+        setup_process('gpg --quiet --batch --yes --ignore-mdc-error --output "/tmp/signed.txt" --sign "~/plaintext.txt"', true, '')
+
+        expect(runner.sign_file('~/plaintext.txt', '/tmp/signed.txt')).to eq(true)
+
+        expect(Open3).to have_received(:popen2e)
+      end
+
+      it 'returns false when signing failed' do
+        setup_process('gpg --quiet --batch --yes --ignore-mdc-error --output "/tmp/signed.txt" --sign "~/plaintext.txt"', false, '')
+
+        expect(runner.sign_file('~/plaintext.txt', '/tmp/signed.txt')).to eq(false)
+      end
+    end
+  end
+
   describe :encrypt_file do
     it 'encrypts a file' do
       setup_process('gpg --quiet --batch --yes --output "/tmp/out.txt" --recipient "foo@bar.com" --trust-model always --encrypt "/tmp/in.txt"', true, '')
