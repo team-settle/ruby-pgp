@@ -2,8 +2,12 @@ module PGP
   class Decryptor
     attr_accessor :passphrase
 
+    def initialize
+      @gpg_engine = GPG::Engine.new
+    end
+
     def decrypt(encrypted_data)
-      result = GPG::Engine.new.decrypt(encrypted_data, self.passphrase)
+      result = @gpg_engine.decrypt(encrypted_data, self.passphrase)
       result[1]
     end
 
@@ -12,7 +16,7 @@ module PGP
     end
 
     def add_keys(key_string)
-      GPG::Engine.new.import_key(key_string)
+      @gpg_engine.import_key(key_string)
     end
 
     def add_keys_from_file(filename)

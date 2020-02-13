@@ -2,8 +2,12 @@ module PGP
   class Signer
     attr_accessor :passphrase
 
+    def initialize
+      @gpg_engine = GPG::Engine.new
+    end
+
     def sign(data)
-      result = GPG::Engine.new.sign(data, self.passphrase)
+      result = @gpg_engine.sign(data, self.passphrase)
       result[1]
     end
 
@@ -12,7 +16,7 @@ module PGP
     end
 
     def add_keys(key_string)
-      GPG::Engine.new.import_key(key_string)
+      @gpg_engine.import_key(key_string)
     end
 
     def add_keys_from_file(filename)

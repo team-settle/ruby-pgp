@@ -3,12 +3,13 @@ module PGP
     attr_accessor :recipients
 
     def initialize(key_string=nil)
+      @gpg_engine = GPG::Engine.new
       self.recipients = []
       add_keys(key_string) if key_string
     end
 
     def add_keys(key_string)
-      self.recipients += GPG::Engine.new.import_key(key_string)
+      self.recipients += @gpg_engine.import_key(key_string)
     end
 
     def add_keys_from_file(filename)
@@ -16,7 +17,7 @@ module PGP
     end
 
     def encrypt(cleartext, filename=nil, mtime=nil)
-      result = GPG::Engine.new.encrypt(cleartext, recipients)
+      result = @gpg_engine.encrypt(cleartext, recipients)
 
       unless filename.nil?
         File.write(filename, result[1])
