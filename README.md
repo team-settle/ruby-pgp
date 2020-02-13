@@ -1,4 +1,4 @@
-# PGP
+# PGP [![Build Status](https://travis-ci.org/cshtdd/ruby-pgp.svg?branch=mri)](https://travis-ci.org/cshtdd/ruby-pgp)  
 
 This is a Java + JRuby wrapper around the Bouncy Castle PGP APIs. The goal is to write
 anything that is memory / object intensive in Java. Use JRuby for everything else.
