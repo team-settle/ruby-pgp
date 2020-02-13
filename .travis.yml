@@ -1,0 +1,12 @@
+language: ruby
+
+services:
+  - docker
+
+before_install:
+- docker pull camilin87/ruby-centos:7
+- docker pull camilin87/ruby-ubuntu:18.04
+
+script:
+- docker run --rm -it -v $PWD:/home/ -w /home/ camilin87/ruby-centos:7 /bin/bash /home/run_tests.sh
+- docker run --rm -it -v $PWD:/home/ -w /home/ camilin87/ruby-ubuntu:18.04 /bin/bash /home/run_tests.sh
