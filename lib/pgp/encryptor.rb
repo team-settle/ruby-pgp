@@ -2,8 +2,8 @@ module PGP
   class Encryptor
     attr_accessor :recipients
 
-    def initialize(key_string=nil)
-      @gpg_engine = GPG::Engine.new
+    def initialize(key_string=nil, gpg_engine=nil)
+      @gpg_engine = gpg_engine || GPG::Engine.new
       self.recipients = []
       add_keys(key_string) if key_string
     end

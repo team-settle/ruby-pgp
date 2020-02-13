@@ -2,8 +2,8 @@ module PGP
   class Decryptor
     attr_accessor :passphrase
 
-    def initialize
-      @gpg_engine = GPG::Engine.new
+    def initialize(gpg_engine=nil)
+      @gpg_engine = gpg_engine || GPG::Engine.new
     end
 
     def decrypt(encrypted_data)

@@ -1,7 +1,7 @@
 module PGP
   class Verifier
-    def initialize
-      @gpg_engine = GPG::Engine.new
+    def initialize(gpg_engine=nil)
+      @gpg_engine = gpg_engine || GPG::Engine.new
     end
 
     def verify(signed_data)
