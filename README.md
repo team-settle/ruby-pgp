@@ -1,7 +1,8 @@
 # PGP [![Build Status](https://travis-ci.org/cshtdd/ruby-pgp.svg?branch=mri)](https://travis-ci.org/cshtdd/ruby-pgp)  
 
-This is a Java + JRuby wrapper around the Bouncy Castle PGP APIs. The goal is to write
-anything that is memory / object intensive in Java. Use JRuby for everything else.
+This a [GnuPG](https://gnupg.org/) wrapper built with Ruby.  
+The gem api is modeled after [jruby-pgp](https://github.com/sgonyea/jruby-pgp) for compatibility reasons with a legacy application.  
+This gem is validated with multiple versions of gpg and multiple operating systems.  
 
 ## Installation
 
@@ -50,16 +51,7 @@ Currently, you **cannot** do the following (These are TODO items):
 ## Notes
 
 This gem currently features everything I need and nothing I don't. Pull requests are very much welcome;
-feature requests will be considered. You may also find examples for certain operations, using the
-Bouncy Castle PGP APIs, and link to them in an Issue. That would make their implementation (by me) far
-more likely to happen.
-
-The general goal is to provide fast, non-terrible wrappers around the Bouncy Castle PGP APIs. Bare-metal
-JRuby code will then plug into those wrappers, to minimize memory bloat. Directly hooking JRuby into the
-BC PGP APIs is certainly possible, but they are a pile of rocks. Using these APIs from JRuby can yield
-some unwanted bloat, especially when you're resource constrained:
-
-[Example using BC PGP directly from JRuby](https://gist.github.com/1954648)
+feature requests will be considered.  
 
 ## Usage
 
@@ -84,6 +76,7 @@ For usage examples, see the below test files:
 
 Just run:
 
-    $ rake spec
+    $ rspec
 
-And it will compile the Java extensions prior to running the tests.
+The [.travis.yml](.travis.yml) file describes our testing strategy for multiple OS.  
+We run the test suite against multiple OS versions with Ruby installed.   
