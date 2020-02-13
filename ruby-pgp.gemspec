@@ -7,6 +7,7 @@ require 'pgp/version'
 Gem::Specification.new do |gem|
   gem.name          = 'ruby-pgp'
   gem.version       = PGP::VERSION
+  gem.licenses      = ['MIT']
   gem.authors       = ['Camilo Sanchez']
   gem.email         = ['gems@tddapps.com']
   gem.description   = %q{PGP for Ruby}
