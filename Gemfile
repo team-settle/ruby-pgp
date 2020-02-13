@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in jruby-pgp.gemspec
+# Specify your gem's dependencies in ruby-pgp.gemspec
 gemspec

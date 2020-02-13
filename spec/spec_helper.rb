@@ -1,6 +1,6 @@
 require 'rspec'
 require 'bundler'
-require 'jruby-pgp'
+require 'ruby-pgp'
 require 'helpers/keys_helper'
 require 'helpers/process_helper'
 require 'helpers/temp_helper'

@@ -8,7 +8,7 @@ This gem is validated with multiple versions of gpg and multiple operating syste
 
 Add this line to your application's Gemfile:
 
-    gem 'jruby-pgp'
+    gem 'ruby-pgp'
 
 And then execute:
 
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install jruby-pgp
+    $ gem install ruby-pgp
 
 ## Feature Support:
 
