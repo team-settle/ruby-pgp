@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 module GPG
   class TempPathHelper
     def self.create(&block)
