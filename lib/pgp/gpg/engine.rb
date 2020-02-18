@@ -1,6 +1,3 @@
-require 'tempfile'
-require 'tmpdir'
-
 module GPG
   class Engine
     include PGP::LogCapable
@@ -13,13 +10,17 @@ module GPG
 
     def import_key(key_contents)
       log("Import Key")
-      validate_gpg_version
-      Tempfile.open do |f|
-        f.write(key_contents)
-        f.rewind
 
-        runner.import_key_from_file(f.path)
+      validate_gpg_version
+
+      result = []
+
+      GPG::TempPathHelper.create do |path1|
+        File.write(path1, key_contents)
+        result = runner.import_key_from_file(path1)
       end
+
+      result
     end
 
     def verify_signature(signature_data)

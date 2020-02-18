@@ -75,16 +75,13 @@ describe GPG::Engine do
   describe :import_key do
     it 'creates a temporary file and imports the key' do
       setup_valid_gpg_version
-      temp_file_stub = setup_temp_file('key contents aaaaa')
-      allow(runner).to receive(:import_key_from_file).with(temp_file_stub.path).and_return([
-        'email1@gmail.com',
-        'email2@gmail.com'
-      ])
+      setup_temp_paths(['path1'])
+      allow(File).to receive(:write).with('path1', 'key contents aaaaa')
+      allow(runner).to receive(:import_key_from_file).with('path1').and_return(['email1@gmail.com', 'email2@gmail.com'])
 
       expect(engine.import_key('key contents aaaaa')).to eq(['email1@gmail.com', 'email2@gmail.com'])
 
-      expect(temp_file_stub).to have_received(:write)
-      expect(temp_file_stub).to have_received(:rewind)
+      expect(File).to have_received(:write)
       expect(runner).to have_received(:import_key_from_file)
     end
 
