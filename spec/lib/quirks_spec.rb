@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tempfile'
 
 describe 'RSpec multiple yields quirks' do
   ##
