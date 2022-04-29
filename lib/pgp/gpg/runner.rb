@@ -106,11 +106,12 @@ module GPG
       run_gpg_silent_command(command)
     end
 
-    def encrypt_file(path, data_output_path, recipients)
+    def encrypt_file(path, data_output_path, recipients, options)
       recipients_str = recipients
                            .map { |s| "--recipient \"#{s}\"" }
                            .join(' ')
-      command = "gpg --quiet --batch --yes --output \"#{data_output_path}\" #{recipients_str} --trust-model always --encrypt \"#{path}\""
+      options_str = options.join(' ')
+      command = "gpg #{options_str} --quiet --batch --yes --output \"#{data_output_path}\" #{recipients_str} --trust-model always --encrypt \"#{path}\""
       run_gpg_silent_command(command)
     end
 
