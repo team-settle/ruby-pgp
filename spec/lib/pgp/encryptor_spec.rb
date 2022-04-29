@@ -15,7 +15,7 @@ describe PGP::Encryptor do
     let(:encryptor) { PGP::Encryptor.new(File.read public_key_path) }
 
     it "should accept public key(s) as an argument" do
-      encrypted_string = encryptor.encrypt(string, "some filename.txt")
+      encrypted_string = encryptor.encrypt(string, filename: "some filename.txt")
 
       expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
     end
@@ -32,7 +32,7 @@ describe PGP::Encryptor do
       }
 
       it "it's encrypted string should be decryptable. durr" do
-        encrypted_string = encryptor.encrypt(string, "some filename.txt")
+        encrypted_string = encryptor.encrypt(string, filename: "some filename.txt")
 
         expect(File.read("some filename.txt")).to eq(encrypted_string)
         expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)
@@ -51,7 +51,7 @@ describe PGP::Encryptor do
       }
 
       it "it's encrypted string should be decryptable. durr" do
-        encrypted_string = encryptor.encrypt(string, "some filename.txt")
+        encrypted_string = encryptor.encrypt(string, filename: "some filename.txt")
 
         expect(File.read("some filename.txt")).to eq(encrypted_string)
         expect(PGP::RubyDecryptor.decrypt(encrypted_string, private_key_path)).to eq(string)

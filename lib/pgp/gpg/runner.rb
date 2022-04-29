@@ -106,7 +106,7 @@ module GPG
       run_gpg_silent_command(command)
     end
 
-    def encrypt_file(path, data_output_path, recipients, options=[])
+    def encrypt_file(path, data_output_path, recipients, options)
       recipients_str = recipients
                            .map { |s| "--recipient \"#{s}\"" }
                            .join(' ')
