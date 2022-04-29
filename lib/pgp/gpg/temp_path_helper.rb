@@ -15,9 +15,7 @@ module GPG
     private
 
     def self.delete(path)
-      if File.exists?(path)
-        File.delete(path)
-      end
+      File.delete(path)  if File.exist?(path)
     end
 
     def self.random_string(length=20)
