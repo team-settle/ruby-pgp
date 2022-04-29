@@ -2,7 +2,7 @@ module PGP
   class Encryptor
     attr_accessor :recipients
 
-    def initialize(key_string=nil, gpg_engine=nil, options=[])
+    def initialize(key_string=nil, gpg_engine=nil)
       @gpg_engine = gpg_engine || GPG::Engine.new
       self.recipients = []
       add_keys(key_string) if key_string
@@ -16,7 +16,7 @@ module PGP
       add_keys(File.read(filename))
     end
 
-    def encrypt(cleartext, options, filename=nil, mtime=nil)
+    def encrypt(cleartext, options=[], filename=nil, mtime=nil)
       result = @gpg_engine.encrypt(cleartext, recipients, options)
 
       unless filename.nil?
