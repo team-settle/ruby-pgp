@@ -16,8 +16,8 @@ module PGP
       add_keys(File.read(filename))
     end
 
-    def encrypt(cleartext, filename=nil, mtime=nil)
-      result = @gpg_engine.encrypt(cleartext, recipients)
+    def encrypt(cleartext, filename=nil, options=[])
+      result = @gpg_engine.encrypt(cleartext, recipients, options)
 
       unless filename.nil?
         File.write(filename, result[1])
@@ -27,7 +27,7 @@ module PGP
     end
 
     def encrypt_file(file_path)
-      encrypt(File.read(file_path))
+      encrypt(File.read(file_path), nil)
     end
 
   end

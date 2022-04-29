@@ -63,7 +63,7 @@ module GPG
       [result, data]
     end
 
-    def encrypt(plaintext_data, recipients)
+    def encrypt(plaintext_data, recipients, options)
       log("Encrypt")
 
       raise 'Recipients cannot be empty' if recipients.empty?
@@ -76,7 +76,7 @@ module GPG
       GPG::TempPathHelper.create do |path1|
         GPG::TempPathHelper.create do |path2|
           File.write(path1, plaintext_data)
-          result = runner.encrypt_file(path1, path2, recipients)
+          result = runner.encrypt_file(path1, path2, recipients, options)
 
           data = File.read(path2) if result
         end
